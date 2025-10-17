@@ -1,0 +1,393 @@
+@import "tailwindcss";
+/* index.css */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Space+Grotesk:wght@400;700&display=swap');
+
+
+
+:root {
+  --font-roboto: "Roboto", sans-serif;
+  --font-grotesk: "Space Grotesk", sans-serif;
+}
+body {
+  font-family: var(--font-roboto);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.font-roboto {
+  font-family: var(--font-roboto);
+}
+
+.font-grotesk {
+  font-family: var(--font-grotesk);
+}
+
+
+
+
+/* styles/index.css */
+
+/* Scope all styles under .banner-section to avoid global conflicts */
+.banner-section {
+  /* Animations */
+  @keyframes slideInFromLeft {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInFromBottom {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes flipOpen {
+    0% {
+      transform: perspective(400px) rotateX(-90deg);
+      opacity: 0;
+    }
+    100% {
+      transform: perspective(400px) rotateX(0deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes popIn {
+    0% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* Slider animations */
+  .animate-heading {
+    animation: slideInFromLeft 1s ease-out forwards;
+  }
+
+  .animate-description {
+    animation: slideInFromBottom 1s ease-out 0.3s forwards;
+  }
+
+  .reset-animation {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  .reset-animation-description {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  .flip-open {
+    animation: flipOpen 0.5s ease-in-out;
+    transform-origin: top center;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  /* Custom styles for react-datepicker */
+  .react-datepicker {
+    font-family: inherit;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    animation: popIn 0.3s ease-out;
+  }
+
+  .react-datepicker__header {
+    background-color: #f59e0b;
+    border-bottom: 1px solid #d97706;
+    border-radius: 0.5rem 0.5rem 0 0;
+    padding: 10px;
+  }
+
+  .react-datepicker__current-month {
+    color: white;
+    font-weight: 600;
+  }
+
+  .react-datepicker__day--selected,
+  .react-datepicker__day--in-selecting-range,
+  .react-datepicker__day--in-range {
+    background-color: #f97316;
+    color: white;
+    border-radius: 50%;
+  }
+
+  .react-datepicker__day:hover {
+    background-color: #fed7aa;
+    border-radius: 50%;
+  }
+
+  .react-datepicker__time-list-item:hover {
+    background-color: #fed7aa;
+  }
+
+  .react-datepicker__time-list-item--selected {
+    background-color: #f97316;
+    color: white;
+  }
+
+  .react-datepicker__navigation-icon::before {
+    border-color: #ffffff;
+  }
+
+  .react-datepicker__time-container {
+    border-left: 1px solid #e5e7eb;
+  }
+
+  .react-datepicker__time-box {
+    border-radius: 0 0 0.5rem 0;
+  }
+
+  /* Style for search button icon */
+  .search-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.marquee-wrapper {
+  width: 100%;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 0px;
+  position: absolute;
+  bottom: -27px;
+  transform: rotate(-2deg);
+  padding: 12px 0;
+  z-index: 9;
+}
+
+.marquee-horizontal {
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.marquee-track {
+  display: inline-flex;
+  gap: 40px; /* space between items */
+  animation: scrollLeft 30s linear infinite;
+}
+
+.marquee-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  border-right: 1px solid #afafaf;
+  white-space: nowrap;
+  padding-right: 20px;
+  color: #000;
+  font-family: var(--font-grotesk);
+}
+
+.marquee-icon {
+  font-size: 18px;
+  color: #384A5A; /* blue, change as needed */
+}
+
+/* Animation: move full width to left */
+@keyframes scrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%); /* half, because we duplicated */
+  }
+}
+.slick-next {
+    right: 15px !important;
+    display: none !important;
+}
+.slick-prev{
+  left:15px !important ;
+}
+.br-left-top {
+    position: absolute;
+    top: -43px;
+    left: 11px;
+    -webkit-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    transform: rotate(270deg);
+    line-height: 1;
+}
+.br-right-bottom {
+    position: absolute;
+    bottom: 9px;
+    right: -43px;
+    -webkit-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    transform: rotate(270deg);
+    line-height: 1;
+}
+
+
+.cartype .br-left-top {
+    position: absolute;
+    top: -43px;
+    left: 9px;
+    -webkit-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    transform: rotate(270deg);
+    line-height: 1;
+}
+.cartype .br-right-bottom {
+    position: absolute;
+    bottom: 6px;
+    right: -44px;
+    -webkit-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    transform: rotate(270deg);
+    line-height: 1;
+}
+.cartypee .br-left-top {
+    top: -43px;
+    left: 8px;
+}
+.cartypee .br-right-bottom {
+    bottom: 8px;
+    right: -44px;
+}
+.linrr{
+  width: 2px;
+  height: 60px;
+  background: #f97316;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.feature-cion{
+  position: relative;
+  z-index: 10;
+  font-size: 40px;
+}
+
+.feature-cion svg {
+    color: #000000;
+    position: relative;
+    z-index: 10;
+    font-size: 32px;
+}
+.feature-cion::before {
+    content: '';
+    position: absolute;
+    top: 24%;
+    left: 24%;
+    transform: translate(-50%, -50%);
+    width: 35px;
+    height: 35px;
+    background: #f97316;
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.cartest .br-left-top {
+    position: absolute;
+    top: -42px;
+    left: 8px;
+    -webkit-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    transform: rotate(270deg);
+    line-height: 1;
+}
+
+.cartest .br-right-bottom {
+    position: absolute;
+    bottom: 6px;
+    right: -44px;
+    -webkit-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    transform: rotate(270deg);
+    line-height: 1;
+}
+
+.car-star .shap-left-top {
+    position: absolute;
+    top: 0px;
+    left: -19px;
+    -webkit-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+.car-star .shap-left-top svg {
+     width: 22px;
+     height: 22px;
+}
+.car-star .shap-right-bottom svg {
+     width: 22px;
+     height: 22px;
+}
+.car-star .shap-right-bottom {
+    position: absolute;
+    bottom:-22px;
+    right: -1px;
+    -webkit-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+.testi .slick-next {
+    right: 20px !important;
+    display:block !important;
+}
+.testi .slick-prev{
+  left:20px !important ;
+  display:block !important;
+  z-index: 99 !important;
+}
+.testi .slick-prev:before {
+    font-family: 'slick';
+    font-size: 26px;
+    line-height: 1;
+    opacity: 1 !important;
+    color: #ff6900 !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.testi .slick-next:before {
+    font-family: 'slick';
+    font-size: 26px;
+    line-height: 1;
+    opacity: 1 !important;
+    color: #ff6900 !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.listing-head ul li{
+  position: relative;
+}
+.listing-head ul li::after{
+      content: "•";
+    color:#333;
+    padding-left:5px;
+    padding-right: 5px;
+    opacity: 0.8;
+
+}
+.listing-head ul li:last-child::after {
+  content: "";
+}
