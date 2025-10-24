@@ -81,6 +81,7 @@ export default function Header() {
   const [forgotIdentifier, setForgotIdentifier] = useState('');
   const [forgotOtp, setForgotOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -94,15 +95,31 @@ export default function Header() {
   useEffect(() => {
     const userData = localStorage.getItem('userData');
     const userName = Cookies.get('userName');
+    setIsLoadingUser(true);
     if (userData) {
-      const parsedUserData = JSON.parse(userData);
-      setUser(parsedUserData);
-      setIsLoggedIn(true);
-      console.log('User restored from localStorage:', parsedUserData);
-      // Sync cookie with fullName
-      if (userName !== parsedUserData.fullName) {
-        console.warn('Cookie userName mismatch:', userName, 'vs', parsedUserData.fullName);
-        Cookies.set('userName', parsedUserData.fullName, { expires: 7 });
+      try {
+        const parsedUserData = JSON.parse(userData);
+        // Validate required fields
+        if (parsedUserData && parsedUserData.fullName && parsedUserData.email && parsedUserData.mobile) {
+          setUser(parsedUserData);
+          setIsLoggedIn(true);
+          console.log('User restored from localStorage:', parsedUserData);
+          // Sync cookie with fullName
+          if (userName !== parsedUserData.fullName) {
+            console.warn('Cookie userName mismatch:', userName, 'vs', parsedUserData.fullName);
+            Cookies.set('userName', parsedUserData.fullName, { expires: 7 });
+          }
+        } else {
+          console.warn('Invalid user data in localStorage:', parsedUserData);
+          localStorage.removeItem('userData'); // Clean up invalid data
+          setIsLoggedIn(false);
+          setUser(null);
+        }
+      } catch (error) {
+        console.error('Error parsing userData from localStorage:', error);
+        localStorage.removeItem('userData'); // Clean up corrupted data
+        setIsLoggedIn(false);
+        setUser(null);
       }
     } else if (userName) {
       // Fallback for old cookie-based session
@@ -114,6 +131,7 @@ export default function Header() {
       setUser(null);
       console.log('No user found in cookies or localStorage');
     }
+    setIsLoadingUser(false);
   }, [setIsLoggedIn, setUser]);
 
   // Open login dialog if redirected with openLogin: true
@@ -399,6 +417,11 @@ export default function Header() {
     }
   };
 
+  // Render loading state while user data is being fetched
+  if (isLoadingUser) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
       <ToastContainer
@@ -417,7 +440,7 @@ export default function Header() {
       <header className="bg-transparent absolute inset-x-0 top-0 z-50 left-0 right-0 backdrop-blur-md border-b border-gray-200">
         <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-0">
           <div className="flex lg:flex-1">
-            <a href="/" className="-m-1.5  rounded-2xl">
+            <a href="/" className="-m-1.5 rounded-2xl">
               <img alt="logo" src={logo} className="h-16 w-auto" />
             </a>
           </div>
@@ -523,7 +546,7 @@ export default function Header() {
             </Popover>
           </PopoverGroup>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:gap-x-4">
-            {isLoggedIn ? (
+            {isLoggedIn && user && (
               <Popover className="relative cursor-pointer">
                 <PopoverButton className="cursor-pointer flex items-center gap-x-2 text-md font-grotesk font-semibold text-white">
                   <UserIcon className="h-10 w-10 bg-[#FF6900] p-2 rounded-full text-white" aria-hidden="true" />
@@ -553,7 +576,8 @@ export default function Header() {
                   </div>
                 </PopoverPanel>
               </Popover>
-            ) : (
+            )}
+            {!isLoggedIn && (
               <div className="flex items-center gap-x-2">
                 <UserIcon className="h-10 w-10 bg-[#FF6900] p-2 rounded-full text-white" aria-hidden="true" />
                 <button
@@ -663,19 +687,19 @@ export default function Header() {
                   </Disclosure>
                   <a
                     href="#"
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                    className="block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                   >
                     About
                   </a>
                   <a
                     href="#"
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                    className="block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                   >
                     Contact
                   </a>
                 </div>
                 <div className="py-6">
-                  {isLoggedIn ? (
+                  {isLoggedIn && user && (
                     <Disclosure as="div" className="-mx-3">
                       <DisclosureButton className="group flex w-full items-center justify-between rounded-lg py-2 pr-3.5 pl-3 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">
                         <div className="flex items-center gap-x-2">
@@ -698,7 +722,8 @@ export default function Header() {
                         ))}
                       </DisclosurePanel>
                     </Disclosure>
-                  ) : (
+                  )}
+                  {!isLoggedIn && (
                     <div className="flex items-center gap-x-2 -mx-3 px-3">
                       <UserIcon className="h-5 w-5 text-gray-900" aria-hidden="true" />
                       <button
