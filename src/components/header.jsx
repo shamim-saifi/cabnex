@@ -679,7 +679,7 @@ export default function Header() {
                 >
                   Login
                 </button>
-                <span className="text-white">/</span>
+                <span className="text-black">/</span>
                 <button
                   onClick={() => setRegisterOpen(true)}
                   className="text-md cursor-pointer font-grotesk font-semibold text-black"
