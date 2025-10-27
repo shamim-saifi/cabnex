@@ -635,10 +635,10 @@ export default function Header() {
                     className="h-10 w-10 bg-[#FF6900] p-2 rounded-full text-white"
                     aria-hidden="true"
                   />
-                  <span>{user?.fullName || "User"}</span>
+                  <span className="text-black">{user?.fullName || "User"}</span>
                   <ChevronDownIcon
                     aria-hidden="true"
-                    className="h-5 w-5 text-gray-400"
+                    className="h-5 w-5 text-gray-700"
                   />
                 </PopoverButton>
                 <PopoverPanel
