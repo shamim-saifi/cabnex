@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogPanel,
@@ -9,7 +9,7 @@ import {
   PopoverButton,
   PopoverGroup,
   PopoverPanel,
-} from '@headlessui/react';
+} from "@headlessui/react";
 import {
   ArrowPathIcon,
   Bars3Icon,
@@ -24,35 +24,64 @@ import {
   DevicePhoneMobileIcon,
   DocumentTextIcon,
   CheckIcon,
-} from '@heroicons/react/24/outline';
-import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import Cookies from 'js-cookie';
-import logo from '../assets/logo/logo-cab.png';
-import loginImg from '../assets/login/login.jpg';
-import signupImg from '../assets/login/register.jpg';
-import { api, endpoints } from '../api/api-config';
-import { useSearch } from '../context/SearchContext';
-import 'react-toastify/dist/ReactToastify.css';
+} from "@heroicons/react/24/outline";
+import {
+  ChevronDownIcon,
+  PhoneIcon,
+  PlayCircleIcon,
+} from "@heroicons/react/20/solid";
+import { useNavigate, useLocation } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import Cookies from "js-cookie";
+import logo from "../assets/logo/logo-cab.png";
+import loginImg from "../assets/login/login.jpg";
+import signupImg from "../assets/login/register.jpg";
+import { api, endpoints } from "../api/api-config";
+import { useSearch } from "../context/SearchContext";
+import "react-toastify/dist/ReactToastify.css";
 
 const services = [
-  { name: 'Corporates', description: 'Reliable transport for business needs', href: '#', icon: ChartPieIcon },
-  { name: 'Special Events', description: 'Transport for events and gatherings', href: '#', icon: CursorArrowRaysIcon },
-  { name: 'City Tours', description: 'Explore cities with comfort', href: '#', icon: FingerPrintIcon },
-  { name: 'MICE', description: 'Solutions for meetings and conferences', href: '#', icon: SquaresPlusIcon },
+  {
+    name: "Corporates",
+    description: "Reliable transport for business needs",
+    href: "#",
+    icon: ChartPieIcon,
+  },
+  {
+    name: "Special Events",
+    description: "Transport for events and gatherings",
+    href: "#",
+    icon: CursorArrowRaysIcon,
+  },
+  {
+    name: "City Tours",
+    description: "Explore cities with comfort",
+    href: "#",
+    icon: FingerPrintIcon,
+  },
+  {
+    name: "MICE",
+    description: "Solutions for meetings and conferences",
+    href: "#",
+    icon: SquaresPlusIcon,
+  },
 ];
 const tourItineraries = [
-  { name: 'Airport Transfer', description: 'Seamless airport transfers', href: '#', icon: ArrowPathIcon },
+  {
+    name: "Airport Transfer",
+    description: "Seamless airport transfers",
+    href: "#",
+    icon: ArrowPathIcon,
+  },
 ];
 const blogLinks = [
-  { name: 'Blog', href: '#', icon: PlayCircleIcon },
-  { name: 'FAQs', href: '#', icon: PhoneIcon },
+  { name: "Blog", href: "#", icon: PlayCircleIcon },
+  { name: "FAQs", href: "#", icon: PhoneIcon },
 ];
 const dropdownItems = [
-  { name: 'My Profile', href: '/profile' },
-  { name: 'My Bookings', href: '/bookings' },
-  { name: 'Logout', href: '#', action: 'logout' },
+  { name: "My Profile", href: "/profile" },
+  { name: "My Bookings", href: "/bookings" },
+  { name: "Logout", href: "#", action: "logout" },
 ];
 
 export default function Header() {
@@ -63,24 +92,24 @@ export default function Header() {
   const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
   const [showForgotOTP, setShowForgotOTP] = useState(false);
   const [forgotVerified, setForgotVerified] = useState(false);
-  const [identifier, setIdentifier] = useState('');
-  const [password, setPassword] = useState('');
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [loginError, setLoginError] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [mobile, setMobile] = useState('');
-  const [registerPassword, setRegisterPassword] = useState('');
-  const [pan, setPan] = useState('');
-  const [gst, setGst] = useState('');
+  const [loginError, setLoginError] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const [pan, setPan] = useState("");
+  const [gst, setGst] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showPhoneOTP, setShowPhoneOTP] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
-  const [phoneOtp, setPhoneOtp] = useState('');
-  const [verifiedRegisterOtp, setVerifiedRegisterOtp] = useState('');
-  const [forgotIdentifier, setForgotIdentifier] = useState('');
-  const [forgotOtp, setForgotOtp] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+  const [phoneOtp, setPhoneOtp] = useState("");
+  const [verifiedRegisterOtp, setVerifiedRegisterOtp] = useState("");
+  const [forgotIdentifier, setForgotIdentifier] = useState("");
+  const [forgotOtp, setForgotOtp] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [isLoadingUser, setIsLoadingUser] = useState(true);
 
   const navigate = useNavigate();
@@ -88,36 +117,46 @@ export default function Header() {
 
   // Debugging context
   useEffect(() => {
-    console.log('SearchContext values:', { isLoggedIn, user });
+    console.log("SearchContext values:", { isLoggedIn, user });
   }, [isLoggedIn, user]);
 
   // Check for existing user session from cookies or localStorage
   useEffect(() => {
-    const userData = localStorage.getItem('userData');
-    const userName = Cookies.get('userName');
+    const userData = localStorage.getItem("userData");
+    const userName = Cookies.get("userName");
     setIsLoadingUser(true);
     if (userData) {
       try {
         const parsedUserData = JSON.parse(userData);
         // Validate required fields
-        if (parsedUserData && parsedUserData.fullName && parsedUserData.email && parsedUserData.mobile) {
+        if (
+          parsedUserData &&
+          parsedUserData.fullName &&
+          parsedUserData.email &&
+          parsedUserData.mobile
+        ) {
           setUser(parsedUserData);
           setIsLoggedIn(true);
-          console.log('User restored from localStorage:', parsedUserData);
+          console.log("User restored from localStorage:", parsedUserData);
           // Sync cookie with fullName
           if (userName !== parsedUserData.fullName) {
-            console.warn('Cookie userName mismatch:', userName, 'vs', parsedUserData.fullName);
-            Cookies.set('userName', parsedUserData.fullName, { expires: 7 });
+            console.warn(
+              "Cookie userName mismatch:",
+              userName,
+              "vs",
+              parsedUserData.fullName
+            );
+            Cookies.set("userName", parsedUserData.fullName, { expires: 7 });
           }
         } else {
-          console.warn('Invalid user data in localStorage:', parsedUserData);
-          localStorage.removeItem('userData'); // Clean up invalid data
+          console.warn("Invalid user data in localStorage:", parsedUserData);
+          localStorage.removeItem("userData"); // Clean up invalid data
           setIsLoggedIn(false);
           setUser(null);
         }
       } catch (error) {
-        console.error('Error parsing userData from localStorage:', error);
-        localStorage.removeItem('userData'); // Clean up corrupted data
+        console.error("Error parsing userData from localStorage:", error);
+        localStorage.removeItem("userData"); // Clean up corrupted data
         setIsLoggedIn(false);
         setUser(null);
       }
@@ -125,11 +164,11 @@ export default function Header() {
       // Fallback for old cookie-based session
       setUser({ fullName: userName });
       setIsLoggedIn(true);
-      console.log('User restored from cookies:', userName);
+      console.log("User restored from cookies:", userName);
     } else {
       setIsLoggedIn(false);
       setUser(null);
-      console.log('No user found in cookies or localStorage');
+      console.log("No user found in cookies or localStorage");
     }
     setIsLoadingUser(false);
   }, [setIsLoggedIn, setUser]);
@@ -144,24 +183,25 @@ export default function Header() {
   // Login Function
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoginError('');
+    setLoginError("");
 
     // Validation
     if (!identifier) {
-      setLoginError('Please enter an email or mobile number.');
-      toast.error('Please enter an email or mobile number.');
+      setLoginError("Please enter an email or mobile number.");
+      toast.error("Please enter an email or mobile number.");
       return;
     }
     if (!password) {
-      setLoginError('Please enter a password.');
-      toast.error('Please enter a password.');
+      setLoginError("Please enter a password.");
+      toast.error("Please enter a password.");
       return;
     }
-    const isValidEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(identifier);
+    const isValidEmail =
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(identifier);
     const isValidMobile = /^\d{10}$/.test(identifier);
     if (!isValidEmail && !isValidMobile) {
-      setLoginError('Please enter a valid email or 10-digit mobile number.');
-      toast.error('Please enter a valid email or 10-digit mobile number.');
+      setLoginError("Please enter a valid email or 10-digit mobile number.");
+      toast.error("Please enter a valid email or 10-digit mobile number.");
       return;
     }
 
@@ -171,45 +211,45 @@ export default function Header() {
 
     try {
       setIsLoading(true);
-      console.log('Logging in with data:', loginData);
-      const response = await api.post('/api/v1/auth/login', loginData);
-      console.log('Login response:', response.data);
+      console.log("Logging in with data:", loginData);
+      const response = await api.post("/api/v1/auth/login", loginData);
+      console.log("Login response:", response.data);
 
       if (response.data.success) {
         const userData = response.data.data; // Expecting { _id, fullName, email, mobile }
         // Validate required fields
         if (!userData.fullName || !userData.email || !userData.mobile) {
-          throw new Error('Incomplete user data received from server');
+          throw new Error("Incomplete user data received from server");
         }
         // Save full user data in localStorage
-        localStorage.setItem('userData', JSON.stringify(userData));
+        localStorage.setItem("userData", JSON.stringify(userData));
         // Save userName in cookie for backward compatibility
-        Cookies.set('userName', userData.fullName, { expires: 7 });
+        Cookies.set("userName", userData.fullName, { expires: 7 });
         setUser(userData);
         setIsLoggedIn(true);
-        toast.success(response.data.message || 'Login successful!');
-        setIdentifier('');
-        setPassword('');
+        toast.success(response.data.message || "Login successful!");
+        setIdentifier("");
+        setPassword("");
         setLoginOpen(false);
 
         // Handle redirect after login
         const { from, car, pendingSearch } = location.state || {};
         if (pendingSearch) {
           handleSearch(pendingSearch.data, pendingSearch.tab);
-        } else if (from === '/car-listing' && car) {
-          navigate('/car-details', { state: { car } });
+        } else if (from === "/car-listing" && car) {
+          navigate("/car-details", { state: { car } });
         } else {
-          navigate(from || '/');
+          navigate(from || "/");
         }
       } else {
-        setLoginError(response.data.message || 'Login failed');
-        toast.error(response.data.message || 'Login failed');
+        setLoginError(response.data.message || "Login failed");
+        toast.error(response.data.message || "Login failed");
       }
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message;
-      setLoginError('Login failed: ' + errorMessage);
-      toast.error('Login failed: ' + errorMessage);
-      console.error('Login error:', error);
+      setLoginError("Login failed: " + errorMessage);
+      toast.error("Login failed: " + errorMessage);
+      console.error("Login error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -217,31 +257,31 @@ export default function Header() {
 
   // Logout Function
   const handleLogout = () => {
-    console.log('Initiating user logout...');
-    Cookies.remove('userName');
-    localStorage.removeItem('userData');
-    localStorage.removeItem('vendorToken');
-    localStorage.removeItem('vendorName');
+    console.log("Initiating user logout...");
+    Cookies.remove("userName");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("vendorToken");
+    localStorage.removeItem("vendorName");
     setIsLoggedIn(false);
     setUser(null);
-    toast.success('Logged out successfully');
-    navigate('/');
+    toast.success("Logged out successfully");
+    navigate("/");
   };
 
   // Register Function
   const handleRegister = async (e) => {
     e.preventDefault();
     if (!fullName || !email || !mobile || !registerPassword || !pan || !gst) {
-      toast.error('Please fill in all fields.');
+      toast.error("Please fill in all fields.");
       return;
     }
     if (!acceptedTerms) {
-      toast.error('You must accept the terms and conditions to register.');
+      toast.error("You must accept the terms and conditions to register.");
       return;
     }
     if (!showPhoneOTP && !phoneVerified) {
       if (!mobile) {
-        toast.error('Please enter a mobile number.');
+        toast.error("Please enter a mobile number.");
         return;
       }
       setShowPhoneOTP(true);
@@ -253,9 +293,9 @@ export default function Header() {
         setPhoneVerified(true);
         setVerifiedRegisterOtp(phoneOtp);
         setShowPhoneOTP(false);
-        toast.success('Phone number verified!');
+        toast.success("Phone number verified!");
       } else {
-        toast.error('Please enter a 4-digit OTP.');
+        toast.error("Please enter a 4-digit OTP.");
         return;
       }
     }
@@ -266,50 +306,53 @@ export default function Header() {
       password: registerPassword,
       pan,
       gst,
-      city: 'Mumbai',
+      city: "Mumbai",
       acceptedTerms,
       otp: verifiedRegisterOtp,
     };
     try {
       setIsLoading(true);
-      console.log('Registering user with data:', formData);
+      console.log("Registering user with data:", formData);
       const response = await api.post(endpoints.signup, formData);
-      console.log('Register response:', response.data);
+      console.log("Register response:", response.data);
       if (response.data.statusCode === 201 && response.data.success) {
         const userData = response.data.data; // Expecting { _id, fullName, email, mobile }
         // Validate required fields
         if (!userData.fullName || !userData.email || !userData.mobile) {
-          throw new Error('Incomplete user data received from server');
+          throw new Error("Incomplete user data received from server");
         }
-        localStorage.setItem('userData', JSON.stringify(userData));
-        Cookies.set('userName', userData.fullName, { expires: 7 });
+        localStorage.setItem("userData", JSON.stringify(userData));
+        Cookies.set("userName", userData.fullName, { expires: 7 });
         setUser(userData);
         setIsLoggedIn(true);
-        toast.success(response.data.message || 'Registration successful!');
-        setFullName('');
-        setEmail('');
-        setMobile('');
-        setRegisterPassword('');
-        setPan('');
-        setGst('');
+        toast.success(response.data.message || "Registration successful!");
+        setFullName("");
+        setEmail("");
+        setMobile("");
+        setRegisterPassword("");
+        setPan("");
+        setGst("");
         setAcceptedTerms(false);
         setPhoneVerified(false);
-        setPhoneOtp('');
-        setVerifiedRegisterOtp('');
+        setPhoneOtp("");
+        setVerifiedRegisterOtp("");
         setRegisterOpen(false);
 
         const { from, car, pendingSearch } = location.state || {};
         if (pendingSearch) {
           handleSearch(pendingSearch.data, pendingSearch.tab);
-        } else if (from === '/car-listing' && car) {
-          navigate('/car-details', { state: { car } });
+        } else if (from === "/car-listing" && car) {
+          navigate("/car-details", { state: { car } });
         } else {
-          navigate(from || '/');
+          navigate(from || "/");
         }
       }
     } catch (error) {
-      toast.error('Registration failed: ' + (error.response?.data?.message || error.message));
-      console.error('Register error:', error);
+      toast.error(
+        "Registration failed: " +
+          (error.response?.data?.message || error.message)
+      );
+      console.error("Register error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -317,37 +360,45 @@ export default function Header() {
 
   // Vendor Registration Navigation
   const handleVendorRegister = () => {
-    navigate('/vendor-registration');
+    navigate("/vendor-registration");
   };
 
   // Forgot Password: Step 1 - Send OTP
   const handleSendForgotOTP = async (e) => {
     e.preventDefault();
     if (!forgotIdentifier) {
-      toast.error('Please enter an email or mobile number.');
+      toast.error("Please enter an email or mobile number.");
       return;
     }
-    const isValidEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(forgotIdentifier);
+    const isValidEmail =
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(forgotIdentifier);
     const isValidMobile = /^\d{10}$/.test(forgotIdentifier);
     if (!isValidEmail && !isValidMobile) {
-      toast.error('Please enter a valid email or 10-digit mobile number.');
+      toast.error("Please enter a valid email or 10-digit mobile number.");
       return;
     }
-    const forgotData = isValidEmail ? { email: forgotIdentifier } : { mobile: forgotIdentifier };
+    const forgotData = isValidEmail
+      ? { email: forgotIdentifier }
+      : { mobile: forgotIdentifier };
     try {
       setIsLoading(true);
-      console.log('Sending OTP with data:', forgotData);
-      const response = await api.put('/api/v1/auth/forget-password', forgotData);
-      console.log('Send OTP response:', response.data);
+      console.log("Sending OTP with data:", forgotData);
+      const response = await api.put(
+        "/api/v1/auth/forget-password",
+        forgotData
+      );
+      console.log("Send OTP response:", response.data);
       if (response.data.success) {
-        toast.info(`Enter any 4-digit OTP for ${forgotIdentifier} (use 1234 for testing)`);
+        toast.info(
+          `Enter any 4-digit OTP for ${forgotIdentifier} (use 1234 for testing)`
+        );
         setShowForgotOTP(true);
       } else {
-        toast.error(response.data.message || 'Failed to send OTP');
+        toast.error(response.data.message || "Failed to send OTP");
       }
     } catch (error) {
-      toast.error('Error: ' + (error.response?.data?.message || error.message));
-      console.error('Send OTP error:', error);
+      toast.error("Error: " + (error.response?.data?.message || error.message));
+      console.error("Send OTP error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -357,22 +408,22 @@ export default function Header() {
   const handleVerifyForgotOTP = async (e) => {
     e.preventDefault();
     if (forgotOtp.length !== 4) {
-      toast.error('Please enter a 4-digit OTP.');
+      toast.error("Please enter a 4-digit OTP.");
       return;
     }
-    if (forgotOtp !== '1234') {
-      toast.error('Invalid OTP. Please enter 1234.');
+    if (forgotOtp !== "1234") {
+      toast.error("Invalid OTP. Please enter 1234.");
       return;
     }
     try {
       setIsLoading(true);
-      console.log('Verifying OTP:', forgotOtp);
+      console.log("Verifying OTP:", forgotOtp);
       setForgotVerified(true);
       setShowForgotOTP(false);
-      toast.success('OTP verified successfully!');
+      toast.success("OTP verified successfully!");
     } catch (error) {
-      toast.error('Error: ' + (error.response?.data?.message || error.message));
-      console.error('Verify OTP error:', error);
+      toast.error("Error: " + (error.response?.data?.message || error.message));
+      console.error("Verify OTP error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -382,36 +433,37 @@ export default function Header() {
   const handleResetPassword = async (e) => {
     e.preventDefault();
     if (!newPassword) {
-      toast.error('Please enter a new password.');
+      toast.error("Please enter a new password.");
       return;
     }
     if (newPassword.length < 8) {
-      toast.error('Password must be at least 8 characters.');
+      toast.error("Password must be at least 8 characters.");
       return;
     }
-    const isValidEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(forgotIdentifier);
+    const isValidEmail =
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(forgotIdentifier);
     const resetData = isValidEmail
       ? { email: forgotIdentifier, otp: forgotOtp, password: newPassword }
       : { mobile: forgotIdentifier, otp: forgotOtp, password: newPassword };
     try {
       setIsLoading(true);
-      console.log('Resetting password with data:', resetData);
-      const response = await api.put('/api/v1/auth/forget-password', resetData);
-      console.log('Reset password response:', response.data);
+      console.log("Resetting password with data:", resetData);
+      const response = await api.put("/api/v1/auth/forget-password", resetData);
+      console.log("Reset password response:", response.data);
       if (response.data.success) {
-        toast.success(response.data.message || 'Password reset successfully!');
+        toast.success(response.data.message || "Password reset successfully!");
         setForgotPasswordOpen(false);
-        setForgotIdentifier('');
-        setForgotOtp('');
-        setNewPassword('');
+        setForgotIdentifier("");
+        setForgotOtp("");
+        setNewPassword("");
         setForgotVerified(false);
         setLoginOpen(true);
       } else {
-        toast.error(response.data.message || 'Failed to reset password');
+        toast.error(response.data.message || "Failed to reset password");
       }
     } catch (error) {
-      toast.error('Error: ' + (error.response?.data?.message || error.message));
-      console.error('Reset password error:', error);
+      toast.error("Error: " + (error.response?.data?.message || error.message));
+      console.error("Reset password error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -437,8 +489,11 @@ export default function Header() {
         theme="light"
         className="font-grotesk"
       />
-      <header className="bg-transparent absolute inset-x-0 top-0 z-50 left-0 right-0 backdrop-blur-md border-b border-gray-200">
-        <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-0">
+      <header className="bg-white absolute inset-x-0 top-0 z-50 left-0 right-0 backdrop-blur-md border-b border-gray-200">
+        <nav
+          aria-label="Global"
+          className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-0"
+        >
           <div className="flex lg:flex-1">
             <a href="/" className="-m-1.5 rounded-2xl">
               <img alt="logo" src={logo} className="h-16 w-auto" />
@@ -456,9 +511,12 @@ export default function Header() {
           </div>
           <PopoverGroup className="hidden lg:flex lg:gap-x-12">
             <Popover className="relative">
-              <PopoverButton className="flex items-center gap-x-1 text-md font-grotesk font-semibold text-white">
+              <PopoverButton className="flex items-center gap-x-1 text-md font-grotesk font-semibold text-black">
                 Services Offered
-                <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none text-gray-400" />
+                <ChevronDownIcon
+                  aria-hidden="true"
+                  className="h-5 w-5 flex-none text-gray-700"
+                />
               </PopoverButton>
               <PopoverPanel
                 transition
@@ -471,10 +529,16 @@ export default function Header() {
                       className="group relative flex items-center gap-x-6 rounded-lg p-4 text-md font-grotesk hover:bg-gray-50"
                     >
                       <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                        <item.icon aria-hidden="true" className="h-6 w-6 text-gray-600 group-hover:text-indigo-600" />
+                        <item.icon
+                          aria-hidden="true"
+                          className="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
+                        />
                       </div>
                       <div className="flex-auto">
-                        <a href={item.href} className="block font-semibold text-gray-900">
+                        <a
+                          href={item.href}
+                          className="block font-semibold text-gray-900"
+                        >
                           {item.name}
                           <span className="absolute inset-0" />
                         </a>
@@ -486,9 +550,12 @@ export default function Header() {
               </PopoverPanel>
             </Popover>
             <Popover className="relative">
-              <PopoverButton className="flex items-center gap-x-1 text-md font-grotesk font-semibold text-white">
+              <PopoverButton className="flex items-center gap-x-1 text-md font-grotesk font-semibold text-black">
                 Tour Itineraries
-                <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none text-gray-400" />
+                <ChevronDownIcon
+                  aria-hidden="true"
+                  className="h-5 w-5 flex-none text-gray-700"
+                />
               </PopoverButton>
               <PopoverPanel
                 transition
@@ -501,10 +568,16 @@ export default function Header() {
                       className="group relative flex items-center gap-x-6 rounded-lg p-4 text-md font-grotesk hover:bg-gray-50"
                     >
                       <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                        <item.icon aria-hidden="true" className="h-6 w-6 text-gray-600 group-hover:text-indigo-600" />
+                        <item.icon
+                          aria-hidden="true"
+                          className="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
+                        />
                       </div>
                       <div className="flex-auto">
-                        <a href={item.href} className="block font-semibold text-gray-900">
+                        <a
+                          href={item.href}
+                          className="block font-semibold text-gray-900"
+                        >
                           {item.name}
                           <span className="absolute inset-0" />
                         </a>
@@ -516,9 +589,12 @@ export default function Header() {
               </PopoverPanel>
             </Popover>
             <Popover className="relative">
-              <PopoverButton className="flex items-center gap-x-1 text-md font-grotesk font-semibold text-white">
+              <PopoverButton className="flex items-center gap-x-1 text-md font-grotesk font-semibold text-black">
                 More
-                <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none text-gray-400" />
+                <ChevronDownIcon
+                  aria-hidden="true"
+                  className="h-5 w-5 flex-none text-gray-700"
+                />
               </PopoverButton>
               <PopoverPanel
                 transition
@@ -531,10 +607,16 @@ export default function Header() {
                       className="group relative flex items-center gap-x-6 rounded-lg p-4 text-md font-grotesk hover:bg-gray-50"
                     >
                       <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                        <item.icon aria-hidden="true" className="h-6 w-6 text-gray-600 group-hover:text-indigo-600" />
+                        <item.icon
+                          aria-hidden="true"
+                          className="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
+                        />
                       </div>
                       <div className="flex-auto">
-                        <a href={item.href} className="block font-semibold text-gray-900">
+                        <a
+                          href={item.href}
+                          className="block font-semibold text-gray-900"
+                        >
                           {item.name}
                           <span className="absolute inset-0" />
                         </a>
@@ -549,9 +631,15 @@ export default function Header() {
             {isLoggedIn && user && (
               <Popover className="relative cursor-pointer">
                 <PopoverButton className="cursor-pointer flex items-center gap-x-2 text-md font-grotesk font-semibold text-white">
-                  <UserIcon className="h-10 w-10 bg-[#FF6900] p-2 rounded-full text-white" aria-hidden="true" />
-                  <span>{user?.fullName || 'User'}</span>
-                  <ChevronDownIcon aria-hidden="true" className="h-5 w-5 text-gray-400" />
+                  <UserIcon
+                    className="h-10 w-10 bg-[#FF6900] p-2 rounded-full text-white"
+                    aria-hidden="true"
+                  />
+                  <span>{user?.fullName || "User"}</span>
+                  <ChevronDownIcon
+                    aria-hidden="true"
+                    className="h-5 w-5 text-gray-400"
+                  />
                 </PopoverButton>
                 <PopoverPanel
                   transition
@@ -565,7 +653,9 @@ export default function Header() {
                       >
                         <a
                           href={item.href}
-                          onClick={item.action === 'logout' ? handleLogout : undefined}
+                          onClick={
+                            item.action === "logout" ? handleLogout : undefined
+                          }
                           className="block w-full font-semibold text-gray-900"
                         >
                           {item.name}
@@ -579,17 +669,20 @@ export default function Header() {
             )}
             {!isLoggedIn && (
               <div className="flex items-center gap-x-2">
-                <UserIcon className="h-10 w-10 bg-[#FF6900] p-2 rounded-full text-white" aria-hidden="true" />
+                <UserIcon
+                  className="h-10 w-10 bg-[#FF6900] p-2 rounded-full text-white"
+                  aria-hidden="true"
+                />
                 <button
                   onClick={() => setLoginOpen(true)}
-                  className="text-md cursor-pointer font-grotesk font-semibold text-white"
+                  className="text-md cursor-pointer font-grotesk font-semibold text-black"
                 >
                   Login
                 </button>
                 <span className="text-white">/</span>
                 <button
                   onClick={() => setRegisterOpen(true)}
-                  className="text-md cursor-pointer font-grotesk font-semibold text-white"
+                  className="text-md cursor-pointer font-grotesk font-semibold text-black"
                 >
                   Register
                 </button>
@@ -603,7 +696,11 @@ export default function Header() {
             )}
           </div>
         </nav>
-        <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
+        <Dialog
+          open={mobileMenuOpen}
+          onClose={setMobileMenuOpen}
+          className="lg:hidden"
+        >
           <div className="fixed inset-0 z-50" />
           <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
             <div className="flex items-center justify-between">
@@ -628,13 +725,17 @@ export default function Header() {
                       Reliable B2B Transport Solution
                     </h2>
                     <p className="text-sm font-normal text-gray-600">
-                      Cabs for Holiday Packages, Transfers, Outstation Rentals, MICE Events
+                      Cabs for Holiday Packages, Transfers, Outstation Rentals,
+                      MICE Events
                     </p>
                   </div>
                   <Disclosure as="div" className="-mx-3">
                     <DisclosureButton className="group flex w-full items-center justify-between rounded-lg py-2 pr-3.5 pl-3 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">
                       Services Offered
-                      <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none group-data-[open]:rotate-180" />
+                      <ChevronDownIcon
+                        aria-hidden="true"
+                        className="h-5 w-5 flex-none group-data-[open]:rotate-180"
+                      />
                     </DisclosureButton>
                     <DisclosurePanel className="mt-2 space-y-2">
                       {services.map((item) => (
@@ -652,7 +753,10 @@ export default function Header() {
                   <Disclosure as="div" className="-mx-3">
                     <DisclosureButton className="group flex w-full items-center justify-between rounded-lg py-2 pr-3.5 pl-3 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">
                       Tour Itineraries
-                      <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none group-data-[open]:rotate-180" />
+                      <ChevronDownIcon
+                        aria-hidden="true"
+                        className="h-5 w-5 flex-none group-data-[open]:rotate-180"
+                      />
                     </DisclosureButton>
                     <DisclosurePanel className="mt-2 space-y-2">
                       {tourItineraries.map((item) => (
@@ -670,7 +774,10 @@ export default function Header() {
                   <Disclosure as="div" className="-mx-3">
                     <DisclosureButton className="group flex w-full items-center justify-between rounded-lg py-2 pr-3.5 pl-3 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">
                       More
-                      <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none group-data-[open]:rotate-180" />
+                      <ChevronDownIcon
+                        aria-hidden="true"
+                        className="h-5 w-5 flex-none group-data-[open]:rotate-180"
+                      />
                     </DisclosureButton>
                     <DisclosurePanel className="mt-2 space-y-2">
                       {blogLinks.map((item) => (
@@ -703,10 +810,16 @@ export default function Header() {
                     <Disclosure as="div" className="-mx-3">
                       <DisclosureButton className="group flex w-full items-center justify-between rounded-lg py-2 pr-3.5 pl-3 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">
                         <div className="flex items-center gap-x-2">
-                          <UserIcon className="h-5 w-5 text-gray-900" aria-hidden="true" />
-                          <span>{user?.fullName || 'User'}</span>
+                          <UserIcon
+                            className="h-5 w-5 text-gray-900"
+                            aria-hidden="true"
+                          />
+                          <span>{user?.fullName || "User"}</span>
                         </div>
-                        <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none group-data-[open]:rotate-180" />
+                        <ChevronDownIcon
+                          aria-hidden="true"
+                          className="h-5 w-5 flex-none group-data-[open]:rotate-180"
+                        />
                       </DisclosureButton>
                       <DisclosurePanel className="mt-2 space-y-2">
                         {dropdownItems.map((item) => (
@@ -714,7 +827,11 @@ export default function Header() {
                             key={item.name}
                             as="a"
                             href={item.href}
-                            onClick={item.action === 'logout' ? handleLogout : undefined}
+                            onClick={
+                              item.action === "logout"
+                                ? handleLogout
+                                : undefined
+                            }
                             className="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50"
                           >
                             {item.name}
@@ -725,7 +842,10 @@ export default function Header() {
                   )}
                   {!isLoggedIn && (
                     <div className="flex items-center gap-x-2 -mx-3 px-3">
-                      <UserIcon className="h-5 w-5 text-gray-900" aria-hidden="true" />
+                      <UserIcon
+                        className="h-5 w-5 text-gray-900"
+                        aria-hidden="true"
+                      />
                       <button
                         onClick={() => setLoginOpen(true)}
                         className="text-base/7 font-semibold text-gray-900"
@@ -757,21 +877,27 @@ export default function Header() {
           <DialogPanel className="fixed inset-0 flex items-center justify-center z-50">
             <div className="flex max-w-4xl w-full bg-white rounded-4xl overflow-hidden shadow-lg">
               <div className="w-1/3">
-                <img src={loginImg} alt="Login background" className="w-full object-cover rounded-l-4xl" />
+                <img
+                  src={loginImg}
+                  alt="Login background"
+                  className="w-full object-cover rounded-l-4xl"
+                />
               </div>
               <div className="w-2/3 p-8 flex flex-col justify-start relative">
                 <button
                   type="button"
                   onClick={() => {
                     setLoginOpen(false);
-                    setLoginError('');
+                    setLoginError("");
                   }}
                   className="absolute top-4 right-4 text-gray-700 hover:text-gray-900"
                 >
                   <span className="sr-only">Close</span>
                   <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
-                <h2 className="text-4xl font-grotesk font-extrabold text-gray-900 mb-8">Login</h2>
+                <h2 className="text-4xl font-grotesk font-extrabold text-gray-900 mb-8">
+                  Login
+                </h2>
                 <div className="space-y-6">
                   <div className="relative">
                     <label
@@ -796,7 +922,10 @@ export default function Header() {
                     </div>
                   </div>
                   <div className="relative">
-                    <label htmlFor="password" className="block font-grotesk text-sm font-medium text-black">
+                    <label
+                      htmlFor="password"
+                      className="block font-grotesk text-sm font-medium text-black"
+                    >
                       Password
                     </label>
                     <div className="mt-1 relative">
@@ -815,7 +944,9 @@ export default function Header() {
                     </div>
                   </div>
                   {loginError && (
-                    <p className="text-red-500 text-sm mt-2 text-center">{loginError}</p>
+                    <p className="text-red-500 text-sm mt-2 text-center">
+                      {loginError}
+                    </p>
                   )}
                   <div className="text-right">
                     <button
@@ -835,19 +966,33 @@ export default function Header() {
                   >
                     {isLoading ? (
                       <span className="flex items-center">
-                        <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                        <svg
+                          className="animate-spin h-5 w-5 mr-2 text-white"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          />
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8v8z"
+                          />
                         </svg>
                         Logging in...
                       </span>
                     ) : (
-                      'Login'
+                      "Login"
                     )}
                   </button>
                   <div className="text-center">
                     <span className="text-sm font-grotesk text-gray-600">
-                      Don’t have an account?{' '}
+                      Don’t have an account?{" "}
                       <button
                         onClick={() => {
                           setLoginOpen(false);
@@ -884,7 +1029,9 @@ export default function Header() {
                   <span className="sr-only">Close</span>
                   <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
-                <h2 className="text-4xl font-grotesk font-extrabold text-gray-900 mb-3">Register</h2>
+                <h2 className="text-4xl font-grotesk font-extrabold text-gray-900 mb-3">
+                  Register
+                </h2>
                 <div className="space-y-4">
                   <div className="flex gap-2 justify-between">
                     <div className="relative w-full">
@@ -933,7 +1080,10 @@ export default function Header() {
                     </div>
                   </div>
                   <div className="relative">
-                    <label htmlFor="mobile" className="block font-grotesk text-sm font-medium text-black">
+                    <label
+                      htmlFor="mobile"
+                      className="block font-grotesk text-sm font-medium text-black"
+                    >
                       Mobile Number
                     </label>
                     <div className="mt-1 relative flex items-center">
@@ -953,19 +1103,26 @@ export default function Header() {
                         <button
                           onClick={() => {
                             if (!mobile) {
-                              toast.error('Please enter a mobile number.');
+                              toast.error("Please enter a mobile number.");
                               return;
                             }
                             setShowPhoneOTP(true);
-                            toast.info(`Enter any 4-digit OTP for ${mobile} (use 1234 for testing)`);
+                            toast.info(
+                              `Enter any 4-digit OTP for ${mobile} (use 1234 for testing)`
+                            );
                           }}
                           disabled={isLoading}
                           className="ml-4 whitespace-nowrap bg-[#FF6900] text-white py-2 px-4 rounded-xl hover:bg-[#CC5500] font-grotesk font-semibold disabled:opacity-50"
                         >
-                          {isLoading ? 'Sending...' : 'Verify'}
+                          {isLoading ? "Sending..." : "Verify"}
                         </button>
                       )}
-                      {phoneVerified && <CheckIcon className="ml-4 h-6 w-6 text-green-500" aria-hidden="true" />}
+                      {phoneVerified && (
+                        <CheckIcon
+                          className="ml-4 h-6 w-6 text-green-500"
+                          aria-hidden="true"
+                        />
+                      )}
                     </div>
                     {showPhoneOTP && !phoneVerified && (
                       <div className="mt-2 flex items-center">
@@ -983,15 +1140,15 @@ export default function Header() {
                               setPhoneVerified(true);
                               setVerifiedRegisterOtp(phoneOtp);
                               setShowPhoneOTP(false);
-                              toast.success('Phone number verified!');
+                              toast.success("Phone number verified!");
                             } else {
-                              toast.error('Please enter a 4-digit OTP.');
+                              toast.error("Please enter a 4-digit OTP.");
                             }
                           }}
                           disabled={isLoading || phoneOtp.length !== 4}
                           className="ml-2 bg-[#FF6900] text-white py-2 px-4 rounded-xl hover:bg-[#CC5500] font-grotesk font-semibold disabled:opacity-50"
                         >
-                          {isLoading ? 'Verifying...' : 'Submit'}
+                          {isLoading ? "Verifying..." : "Submit"}
                         </button>
                       </div>
                     )}
@@ -1020,7 +1177,10 @@ export default function Header() {
                       </div>
                     </div>
                     <div className="relative w-full">
-                      <label htmlFor="pan" className="block font-grotesk text-sm font-medium text-black">
+                      <label
+                        htmlFor="pan"
+                        className="block font-grotesk text-sm font-medium text-black"
+                      >
                         PAN Number
                       </label>
                       <div className="mt-1 relative">
@@ -1041,7 +1201,10 @@ export default function Header() {
                   </div>
                   <div className="flex gap-2 justify-between">
                     <div className="relative w-full">
-                      <label htmlFor="gst" className="block font-grotesk text-sm font-medium text-black">
+                      <label
+                        htmlFor="gst"
+                        className="block font-grotesk text-sm font-medium text-black"
+                      >
                         GST Number
                       </label>
                       <div className="mt-1 relative">
@@ -1082,19 +1245,33 @@ export default function Header() {
                   >
                     {isLoading ? (
                       <span className="flex items-center">
-                        <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                        <svg
+                          className="animate-spin h-5 w-5 mr-2 text-white"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          />
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8v8z"
+                          />
                         </svg>
                         Registering...
                       </span>
                     ) : (
-                      'Register'
+                      "Register"
                     )}
                   </button>
                   <div className="text-center">
                     <span className="text-sm font-grotesk text-gray-600">
-                      Already have an account?{' '}
+                      Already have an account?{" "}
                       <button
                         onClick={() => {
                           setRegisterOpen(false);
@@ -1111,7 +1288,10 @@ export default function Header() {
             </div>
           </DialogPanel>
         </Dialog>
-        <Dialog open={forgotPasswordOpen} onClose={() => setForgotPasswordOpen(false)}>
+        <Dialog
+          open={forgotPasswordOpen}
+          onClose={() => setForgotPasswordOpen(false)}
+        >
           <div className="fixed inset-0 bg-black/30 z-50" aria-hidden="true" />
           <DialogPanel className="fixed inset-0 flex items-center justify-center z-50">
             <div className="flex max-w-md w-full bg-white rounded-2xl p-6 shadow-lg">
@@ -1125,7 +1305,11 @@ export default function Header() {
                   <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
                 <h2 className="text-2xl font-grotesk font-extrabold text-gray-900 mb-6">
-                  {forgotVerified ? 'Reset Password' : showForgotOTP ? 'Verify OTP' : 'Forgot Password'}
+                  {forgotVerified
+                    ? "Reset Password"
+                    : showForgotOTP
+                    ? "Verify OTP"
+                    : "Forgot Password"}
                 </h2>
                 <div className="space-y-4">
                   {!forgotVerified && (
@@ -1158,14 +1342,28 @@ export default function Header() {
                           >
                             {isLoading ? (
                               <span className="flex items-center">
-                                <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
-                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                                <svg
+                                  className="animate-spin h-5 w-5 mr-2 text-white"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <circle
+                                    className="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    strokeWidth="4"
+                                  />
+                                  <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8v8z"
+                                  />
                                 </svg>
                                 Sending...
                               </span>
                             ) : (
-                              'Send OTP'
+                              "Send OTP"
                             )}
                           </button>
                         )}
@@ -1197,14 +1395,28 @@ export default function Header() {
                         >
                           {isLoading ? (
                             <span className="flex items-center">
-                              <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                              <svg
+                                className="animate-spin h-5 w-5 mr-2 text-white"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                />
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8v8z"
+                                />
                               </svg>
                               Verifying...
                             </span>
                           ) : (
-                            'Submit'
+                            "Submit"
                           )}
                         </button>
                       </div>
@@ -1242,28 +1454,42 @@ export default function Header() {
                     >
                       {isLoading ? (
                         <span className="flex items-center">
-                          <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                          <svg
+                            className="animate-spin h-5 w-5 mr-2 text-white"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            />
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8v8z"
+                            />
                           </svg>
                           Resetting Password...
                         </span>
                       ) : (
-                        'Reset Password'
+                        "Reset Password"
                       )}
                     </button>
                   )}
                   <div className="text-center">
                     <span className="text-sm font-grotesk text-gray-600">
-                      Back to{' '}
+                      Back to{" "}
                       <button
                         onClick={() => {
                           setForgotPasswordOpen(false);
                           setShowForgotOTP(false);
                           setForgotVerified(false);
-                          setForgotIdentifier('');
-                          setForgotOtp('');
-                          setNewPassword('');
+                          setForgotIdentifier("");
+                          setForgotOtp("");
+                          setNewPassword("");
                           setLoginOpen(true);
                         }}
                         className="text-indigo-600 cursor-pointer hover:text-indigo-800 font-semibold"
