@@ -1,4 +1,3 @@
-// src/components/carlisting/ListingPage.jsx (Full Updated Code)
 import React, { useState, useEffect } from "react";
 import {
   ChevronDownIcon,
@@ -25,7 +24,7 @@ const iconMap = {
 };
 
 const ListingPage = () => {
-  const { searchResult, setSearchResult } = useSearch();
+  const { searchResult, setSearchResult, setSearchFormData } = useSearch(); // Added setSearchFormData
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [summary, setSummary] = useState({
@@ -457,8 +456,15 @@ const FilterSection = ({ title, defaultOpen, children, icon: Icon }) => {
 const ItemCard = ({ item }) => {
   const [showDetails, setShowDetails] = useState(false);
   const navigate = useNavigate();
+  const { searchResult, setSearchFormData } = useSearch(); // Added setSearchFormData
 
   const handleBookNow = () => {
+    // Ensure distance is preserved in searchFormData before navigating
+    setSearchFormData((prev) => ({
+      ...prev,
+      distance: searchResult.data?.distance || 0, // Preserve distance from searchResult
+    }));
+
     const serializableItem = {
       ...item,
       inclusions: item.inclusions
@@ -469,7 +475,7 @@ const ItemCard = ({ item }) => {
         : [],
     };
 
-    navigate("/car-details", { state: { item: serializableItem } });
+    navigate("/booking-details", { state: { item: serializableItem } }); // Changed to /booking-details
   };
 
   if (item.type === "activity") {

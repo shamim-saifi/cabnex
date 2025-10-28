@@ -30,7 +30,7 @@ import {
   PhoneIcon,
   PlayCircleIcon,
 } from "@heroicons/react/20/solid";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import Cookies from "js-cookie";
 import logo from "../assets/logo/logo-cab.png";
@@ -40,49 +40,49 @@ import { api, endpoints } from "../api/api-config";
 import { useSearch } from "../context/SearchContext";
 import "react-toastify/dist/ReactToastify.css";
 
+import { GlobeAltIcon, BriefcaseIcon, UsersIcon, CameraIcon, CalendarIcon } from '@heroicons/react/24/outline';
+
 const services = [
   {
-    name: "Corporates",
-    description: "Reliable transport for business needs",
-    href: "#",
-    icon: ChartPieIcon,
+    name: "Leisure & Holiday Travel",
+    description: "Explore South India in comfort and style.",
+    href: "/services#leisure",
+    icon: GlobeAltIcon,
   },
   {
-    name: "Special Events",
-    description: "Transport for events and gatherings",
-    href: "#",
-    icon: CursorArrowRaysIcon,
+    name: "Corporate Travel",
+    description: "Dependable mobility solutions for your business.",
+    href: "/services#corporate",
+    icon: BriefcaseIcon,
   },
   {
-    name: "City Tours",
-    description: "Explore cities with comfort",
-    href: "#",
-    icon: FingerPrintIcon,
+    name: "Events & Delegations",
+    description: "Seamless multi-vehicle coordination for groups.",
+    href: "/services#events",
+    icon: UsersIcon,
   },
   {
-    name: "MICE",
-    description: "Solutions for meetings and conferences",
-    href: "#",
-    icon: SquaresPlusIcon,
+    name: "City & Sightseeing Tours",
+    description: "Discover the best of every destination.",
+    href: "/services#sightseeing",
+    icon: CameraIcon,
+  },
+    {
+    name: "MICE Transport",
+    description: "Tailored ground transport for large events.",
+    href: "/services#mice",
+    icon: CalendarIcon,
   },
 ];
-const tourItineraries = [
-  {
-    name: "Airport Transfer",
-    description: "Seamless airport transfers",
-    href: "#",
-    icon: ArrowPathIcon,
-  },
-];
-const blogLinks = [
-  { name: "Blog", href: "#", icon: PlayCircleIcon },
-  { name: "FAQs", href: "#", icon: PhoneIcon },
-];
+
 const dropdownItems = [
   { name: "My Profile", href: "/profile" },
-  { name: "My Bookings", href: "/bookings" },
+  { name: "My Bookings", href: "/my-bookings" },
   { name: "Logout", href: "#", action: "logout" },
 ];
+
+const tourItineraries = [];
+const blogLinks = [];
 
 export default function Header() {
   const { isLoggedIn, setIsLoggedIn, user, setUser } = useSearch();
@@ -512,7 +512,7 @@ export default function Header() {
           <PopoverGroup className="hidden lg:flex lg:gap-x-12">
             <Popover className="relative">
               <PopoverButton className="flex items-center gap-x-1 text-md font-grotesk font-semibold text-black">
-                Services Offered
+                Mobility Solutions
                 <ChevronDownIcon
                   aria-hidden="true"
                   className="h-5 w-5 flex-none text-gray-700"
@@ -549,83 +549,9 @@ export default function Header() {
                 </div>
               </PopoverPanel>
             </Popover>
-            <Popover className="relative">
-              <PopoverButton className="flex items-center gap-x-1 text-md font-grotesk font-semibold text-black">
-                Tour Itineraries
-                <ChevronDownIcon
-                  aria-hidden="true"
-                  className="h-5 w-5 flex-none text-gray-700"
-                />
-              </PopoverButton>
-              <PopoverPanel
-                transition
-                className="absolute left-1/2 z-10 mt-3 w-screen max-w-md -translate-x-1/2 overflow-hidden rounded-3xl bg-white shadow-lg outline-1 outline-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[enter]:ease-out data-[leave]:duration-150 data-[leave]:ease-in"
-              >
-                <div className="p-4">
-                  {tourItineraries.map((item) => (
-                    <div
-                      key={item.name}
-                      className="group relative flex items-center gap-x-6 rounded-lg p-4 text-md font-grotesk hover:bg-gray-50"
-                    >
-                      <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                        <item.icon
-                          aria-hidden="true"
-                          className="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
-                        />
-                      </div>
-                      <div className="flex-auto">
-                        <a
-                          href={item.href}
-                          className="block font-semibold text-gray-900"
-                        >
-                          {item.name}
-                          <span className="absolute inset-0" />
-                        </a>
-                        <p className="mt-1 text-gray-600">{item.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </PopoverPanel>
-            </Popover>
-            <Popover className="relative">
-              <PopoverButton className="flex items-center gap-x-1 text-md font-grotesk font-semibold text-black">
-                More
-                <ChevronDownIcon
-                  aria-hidden="true"
-                  className="h-5 w-5 flex-none text-gray-700"
-                />
-              </PopoverButton>
-              <PopoverPanel
-                transition
-                className="absolute left-1/2 z-10 mt-3 w-screen max-w-md -translate-x-1/2 overflow-hidden rounded-3xl bg-white shadow-lg outline-1 outline-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[enter]:ease-out data-[leave]:duration-150 data-[leave]:ease-in"
-              >
-                <div className="p-4">
-                  {blogLinks.map((item) => (
-                    <div
-                      key={item.name}
-                      className="group relative flex items-center gap-x-6 rounded-lg p-4 text-md font-grotesk hover:bg-gray-50"
-                    >
-                      <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                        <item.icon
-                          aria-hidden="true"
-                          className="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
-                        />
-                      </div>
-                      <div className="flex-auto">
-                        <a
-                          href={item.href}
-                          className="block font-semibold text-gray-900"
-                        >
-                          {item.name}
-                          <span className="absolute inset-0" />
-                        </a>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </PopoverPanel>
-            </Popover>
+            <Link to="/about" className="text-md font-grotesk font-semibold text-black">
+              About Us
+            </Link>
           </PopoverGroup>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:gap-x-4">
             {isLoggedIn && user && (
@@ -651,16 +577,22 @@ export default function Header() {
                         key={item.name}
                         className="group relative flex items-center gap-x-4 rounded-lg p-2 text-md font-grotesk hover:bg-gray-50"
                       >
-                        <a
-                          href={item.href}
-                          onClick={
-                            item.action === "logout" ? handleLogout : undefined
-                          }
-                          className="block w-full font-semibold text-gray-900"
-                        >
-                          {item.name}
-                          <span className="absolute inset-0" />
-                        </a>
+                        {item.action === "logout" ? (
+                          <button
+                            onClick={handleLogout}
+                            className="block w-full text-left font-semibold text-gray-900"
+                          >
+                            {item.name}
+                          </button>
+                        ) : (
+                          <Link
+                            to={item.href}
+                            className="block w-full font-semibold text-gray-900"
+                          >
+                            {item.name}
+                            <span className="absolute inset-0" />
+                          </Link>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -822,21 +754,27 @@ export default function Header() {
                         />
                       </DisclosureButton>
                       <DisclosurePanel className="mt-2 space-y-2">
-                        {dropdownItems.map((item) => (
-                          <DisclosureButton
-                            key={item.name}
-                            as="a"
-                            href={item.href}
-                            onClick={
-                              item.action === "logout"
-                                ? handleLogout
-                                : undefined
-                            }
-                            className="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50"
-                          >
-                            {item.name}
-                          </DisclosureButton>
-                        ))}
+                        {dropdownItems.map((item) =>
+                          item.action === "logout" ? (
+                            <DisclosureButton
+                              key={item.name}
+                              as="button"
+                              onClick={handleLogout}
+                              className="block w-full text-left rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50"
+                            >
+                              {item.name}
+                            </DisclosureButton>
+                          ) : (
+                            <DisclosureButton
+                              key={item.name}
+                              as={Link}
+                              to={item.href}
+                              className="block rounded-lg py-2 pr-3 pl-6 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50"
+                            >
+                              {item.name}
+                            </DisclosureButton>
+                          )
+                        )}
                       </DisclosurePanel>
                     </Disclosure>
                   )}

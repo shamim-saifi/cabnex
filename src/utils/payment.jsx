@@ -76,6 +76,7 @@ export const loadRazorpay = async ({
               distance: distance || 0,
               totalAmount,
               city,
+              oneWay,
             };
             console.log('Verification Payload:', verifyPayload);
 
