@@ -91,7 +91,7 @@ const BannerSlider = () => {
           {slides.map((slide, index) => (
             <div key={index} className="outline-none">
               <div
-                className="h-dvh pb-22 w-full bg-cover bg-center relative flex items-center justify-start"
+                className="h-[60vh] lg:h-dvh pb-22 w-full bg-cover bg-center relative flex items-center justify-start"
                 style={{ backgroundImage: `url(${slide.image})` }}
               >
                 <div className="absolute inset-0 bg-[#00000063]"></div>
@@ -115,7 +115,7 @@ const BannerSlider = () => {
             </div>
           ))}
         </Slider>
-       <div className="absolute top-[52%] left-[-20px] w-full ">
+       <div className="lg:absolute lg:top-[52%] lg:left-[-20px] w-full ">
          <Searchsection/>
        </div>
       </div>

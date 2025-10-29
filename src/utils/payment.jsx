@@ -19,6 +19,7 @@ export const loadRazorpay = async ({
   distance,
   totalAmount,
   city,
+   oneWay,
   user,
 }) => {
   const initiatePayment = async () => {

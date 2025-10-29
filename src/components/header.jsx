@@ -814,14 +814,14 @@ export default function Header() {
           <div className="fixed inset-0 bg-black/30 z-50" aria-hidden="true" />
           <DialogPanel className="fixed inset-0 flex items-center justify-center z-50">
             <div className="flex max-w-4xl w-full bg-white rounded-4xl overflow-hidden shadow-lg">
-              <div className="w-1/3">
+              <div className="hidden md:block md:w-1/3">
                 <img
                   src={loginImg}
                   alt="Login background"
-                  className="w-full object-cover rounded-l-4xl"
+                  className="w-full h-full object-cover rounded-l-4xl"
                 />
               </div>
-              <div className="w-2/3 p-8 flex flex-col justify-start relative">
+              <div className="w-full md:w-2/3 p-8 flex flex-col justify-start relative">
                 <button
                   type="button"
                   onClick={() => {
@@ -951,14 +951,14 @@ export default function Header() {
           <div className="fixed inset-0 bg-black/30 z-50" aria-hidden="true" />
           <DialogPanel className="fixed inset-0 flex items-center justify-center z-50">
             <div className="flex max-w-4xl w-full bg-white rounded-4xl overflow-hidden shadow-lg">
-              <div className="w-1/3">
+              <div className="hidden md:block md:w-1/3">
                 <img
                   src={signupImg}
                   alt="Register background"
-                  className="h-[600px] w-full object-cover rounded-l-4xl"
+                  className="h-full w-full object-cover rounded-l-4xl"
                 />
               </div>
-              <div className="w-2/3 p-6 flex flex-col justify-start relative overflow-y-auto h-[600px]">
+              <div className="w-full md:w-2/3 p-6 flex flex-col justify-start relative overflow-y-auto h-[600px]">
                 <button
                   type="button"
                   onClick={() => setRegisterOpen(false)}
