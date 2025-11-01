@@ -506,7 +506,7 @@ export default function Header() {
               className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-white"
             >
               <span className="sr-only">Open main menu</span>
-              <Bars3Icon aria-hidden="true" className="h-6 w-6" />
+              <Bars3Icon aria-hidden="true" className="h-8 w-8 rounded-md text-orange-600 bg-orange-100 p-1" />
             </button>
           </div>
           <PopoverGroup className="hidden lg:flex lg:gap-x-12">

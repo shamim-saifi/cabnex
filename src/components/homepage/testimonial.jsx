@@ -50,7 +50,7 @@ export default function TestimonialSection() {
   };
 
   return (
-    <section className="bg-white testi p-16 pt-20">
+    <section className="bg-white testi sm:p-16 pt-20">
       <div className="max-w-7xl mx-auto">
         {/* Heading */}
         <div className="text-center mb-10">
@@ -58,7 +58,7 @@ export default function TestimonialSection() {
           <span className="text-sm uppercase font-grotesk text-orange-500 tracking-widest">
             Testimonials
           </span>
-          <h2 className="text-3xl md:text-5xl font-grotesk text-black font-extrabold leading-14 mt-2 mb-4">
+          <h2 className="text-[30px] md:text-5xl font-grotesk text-black font-extrabold md:leading-14 mt-2 mb-4">
             What Our <span className="text-orange-600">Customers</span> Say
           </h2>
           <p className="mt-3 text-slate-600 max-w-xl mx-auto">
@@ -78,7 +78,7 @@ export default function TestimonialSection() {
                   <p className="text-slate-600 mt-2 text-sm ">
                     "{testimonial.review}"
                   </p>
-                   <div className="absolute bottom-2 left-[28%] ">
+                   <div className="absolute bottom-2 left-[30%] md:left-[28%] ">
                     <h3 className="font-grotesk text-lg font-semibold text-black">
                     {testimonial.name}
                   </h3>

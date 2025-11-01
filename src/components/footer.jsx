@@ -14,7 +14,7 @@ export default function Footer() {
 
       <div className=" px-4 relative max-w-7xl mx-auto z-10">
         {/* Contact Section */}
-        <div className="flex flex-col md:flex-row justify-between gap-8 bg-[#1b1b1bee] items-center py-5 mb-20 px-6 md:px-8 border border-[#202020] rounded-2xl">
+        <div className="flex flex-col md:flex-row justify-between gap-8 bg-[#1b1b1bee] items-start md:items-center py-5 mb-20 px-6 md:px-8 border border-[#202020] rounded-2xl">
           <div className="text-center md:text-left flex  items-center ">
             <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-2">
               <svg

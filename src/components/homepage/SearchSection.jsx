@@ -212,11 +212,25 @@ const SearchSection = ({ isUpdate = false }) => {
       transferDateTime: transferDateTime ? transferDateTime.toISOString() : null,
     };
   } else if (serviceType === 'outstation') {
-    pickupLocation = selectedPlaces.outstationPickup || null;
-    dropoffLocation = outstationTripType === 'multicity' ? null : selectedPlaces.outstationDropoff || null;
+    if (outstationTripType === 'multicity' && cleanStops.length > 0) {
+      pickupLocation = {
+        name: cleanStops[0].selectedPickupAddress,
+        place_id: cleanStops[0].pickupPlaceId,
+      };
+      dropoffLocation = {
+        name: cleanStops[cleanStops.length - 1].selectedDropoffAddress,
+        place_id: cleanStops[cleanStops.length - 1].dropoffPlaceId,
+      };
+    } else {
+      pickupLocation = selectedPlaces.outstationPickup || null;
+      dropoffLocation = selectedPlaces.outstationDropoff || null;
+    }
     newFormData = {
       ...newFormData,
-      outstationPickupDateTime: outstationPickupDateTime ? outstationPickupDateTime.toISOString() : null,
+      outstationPickupDateTime: 
+        outstationTripType === 'multicity' && cleanStops.length > 0 
+          ? cleanStops[0].dateTime 
+          : outstationPickupDateTime ? outstationPickupDateTime.toISOString() : null,
       outstationReturnDateTime: outstationTripType === 'round-trip' ? outstationReturnDateTime?.toISOString() : null,
       multicityStops: outstationTripType === 'multicity' ? cleanStops : [],
     };
@@ -312,19 +326,25 @@ const SearchSection = ({ isUpdate = false }) => {
     <LoadScript googleMapsApiKey={googleConfig.apiKey} libraries={googleConfig.libraries}>
       <div className="search-section w-full max-w-7xl mx-auto mt-6 px-4 z-30 relative">
         <Tabs selectedIndex={activeTabIndex} onSelect={setActiveTabIndex}>
-          <TabList className="flex justify-center gap-0 md:justify-start border-gray-200 mb-0">
-            {tabs.map((tab, index, arr) => (
-              <Tab
-                key={index}
-                className={`px-6 py-3 font-grotesk text-md font-medium cursor-pointer backdrop-blur-xl bg-[#cdcdcd33] text-[#ffffff] hover:bg-black transition-colors ${
-                  index === 0 ? 'rounded-tl-3xl' : index === arr.length - 1 ? 'rounded-tr-3xl' : ''
-                }`}
-                selectedClassName="bg-orange-600 text-white"
-              >
-                {tab}
-              </Tab>
-            ))}
-          </TabList>
+         <TabList
+  className="flex flex-wrap justify-center gap-0 md:justify-start border-gray-200 mb-0"
+>
+  {tabs.map((tab, index, arr) => (
+    <Tab
+      key={index}
+      className={`w-1/2 md:w-auto text-center px-6 py-3 font-grotesk text-md font-medium cursor-pointer backdrop-blur-xl bg-[#cdcdcd33] text-[#ffffff] hover:bg-black transition-colors ${
+        index === 0
+          ? 'rounded-tl-3xl md:rounded-tl-3xl'
+          : index === arr.length - 1
+          ? 'rounded-tr-3xl md:rounded-tr-3xl'
+          : ''
+      }`}
+      selectedClassName="bg-orange-600 text-white"
+    >
+      {tab}
+    </Tab>
+  ))}
+</TabList>
 
           <TabPanel>
             <form

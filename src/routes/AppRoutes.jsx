@@ -15,6 +15,7 @@ import ExplorePackages from '../pages/ExplorePackages';
 import SuccessPage from '../pages/SuccessPage';
 import MyProfilePage from '../pages/MyProfilePage'; // Add import
 import MyBookingsPage from '../pages/MyBookingsPage'; // Add import
+import MyBookingDetailPage from '../pages/MyBookingDetailPage';
 import MobilitySolutionsPage from '../pages/MobilitySolutionsPage';
 import AboutUsPage from '../pages/AboutUsPage';
 import OurTeamPage from '../pages/OurTeamPage';
@@ -40,6 +41,7 @@ const AppRoutes = () => {
       <Route path="/booking-details" element={<CardDetails />} /> {/* Corrected path */}
       <Route path="/profile" element={<MyProfilePage />} /> {/* Add route */}
       <Route path="/my-bookings" element={<MyBookingsPage />} /> {/* Add route */}
+      <Route path="/my-booking-detail" element={<MyBookingDetailPage />} />
       <Route path="/vendor-login" element={<VendorLogin />} />
       <Route path="/vendor-registration" element={<VendorRegistration />} />
       <Route path="/terms-and-conditions" element={<TermAndConditionPage />} />

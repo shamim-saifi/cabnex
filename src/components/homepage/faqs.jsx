@@ -78,7 +78,7 @@ const FAQ = () => {
       onClick={() => toggleFAQ(index)}
     >
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-grotesk font-semibold text-black">
+        <h3 className="text-md md:text-lg font-grotesk font-semibold text-black">
           {faq.question}
         </h3>
         <div
