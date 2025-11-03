@@ -26,7 +26,7 @@ const iconMap = {
 };
 
 const ListingPage = () => {
-  const { searchResult, setSearchResult, setSearchFormData } = useSearch();
+  const { searchResult, setSearchResult, setSearchFormData, searchFormData } = useSearch();
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [summary, setSummary] = useState({
@@ -35,6 +35,8 @@ const ListingPage = () => {
     time: "-",
     serviceType: "Rental Trip",
     city: "",
+    showTime: true,
+    showAdults: true,
   });
   const [isActivity, setIsActivity] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,8 +60,9 @@ const ListingPage = () => {
     }
 
     if (result && result.success && result.data) {
-      const serviceType = result.serviceType || "rental";
-      if (serviceType === "activity" || result.data.activities) {
+      const currentServiceType = searchFormData.serviceType || "rental";
+
+      if (currentServiceType === "activity" || result.data.activities) {
         setIsActivity(true);
         const activities = result.data.activities || [];
         setSummary({
@@ -71,6 +74,8 @@ const ListingPage = () => {
             ? result.data.city.charAt(0).toUpperCase() +
               result.data.city.slice(1)
             : "",
+          showTime: false,
+          showAdults: false,
         });
 
         const mappedActivities = activities.map((act, idx) => ({
@@ -101,12 +106,17 @@ const ListingPage = () => {
       } else {
         setIsActivity(false);
         const { data } = result;
+
+        // TRANSFER ME SAB HATADO
+        const isTransfer = currentServiceType === "transfer";
         setSummary({
           total: data.categories ? data.categories.length : 0,
           distance: data.distance || "-",
-          time: data.time ? `${Math.floor(data.time / 60)} hrs` : "-",
-          serviceType: serviceType.toUpperCase().replace(/_/g, " ") + " TRIP",
+          time: isTransfer ? "-" : (data.time ? `${Math.floor(data.time / 60)} hrs` : "-"),
+          serviceType: currentServiceType.toUpperCase().replace(/_/g, " ") + " TRIP",
           city: "",
+          showTime: !isTransfer,
+          showAdults: !isTransfer,
         });
 
         const mappedCars = (data.categories || [])
@@ -234,7 +244,7 @@ const ListingPage = () => {
   return (
     <section className="max-w-7xl mx-auto p-4 sm:p-6">
       {/* Header */}
-      <div className="listing-head mb-6 mt-8 sm:mt-24">
+      <div className="listing-head mb-6 mt-8 sm:mt-0">
         <h3 className="text-2xl sm:text-4xl font-extrabold font-grotesk">
           {summary.total} {isActivity ? "Activities" : "Cars"} Available
         </h3>
@@ -251,17 +261,25 @@ const ListingPage = () => {
               <li className="font-grotesk font-semibold">
                 Total Distance: {summary.distance} km
               </li>
-              <li className="font-grotesk font-semibold">
-                Estimated Time: {summary.time}
-              </li>
-              <li className="font-grotesk font-semibold">2 Adults</li>
+
+              {/* Estimated Time – Sirf non-transfer me */}
+              {summary.showTime && (
+                <li className="font-grotesk font-semibold">
+                  Estimated Time: {summary.time}
+                </li>
+              )}
+
+              {/* 2 Adults – Sirf non-transfer me */}
+              {summary.showAdults && (
+                <li className="font-grotesk font-semibold">2 Adults</li>
+              )}
             </>
           )}
         </ul>
       </div>
 
       <div className="flex gap-6 relative">
-        {/* Desktop Filters - UNCHANGED */}
+        {/* Desktop Filters */}
         {!isActivity && (
           <aside className="hidden lg:block w-1/4">
             <div className="sticky top-0">
@@ -432,7 +450,7 @@ const ListingPage = () => {
           )}
         </main>
 
-        {/* Mobile Filter Button (Fixed) */}
+        {/* Mobile Filter Button */}
         {!isActivity && (
           <button
             onClick={() => setIsFilterOpen(true)}
@@ -463,7 +481,6 @@ const ListingPage = () => {
             </div>
 
             <div className="p-5 space-y-6 overflow-y-auto h-full pb-20">
-              {/* Search */}
               <div className="relative">
                 <input
                   type="text"
@@ -473,7 +490,6 @@ const ListingPage = () => {
                 <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
               </div>
 
-              {/* Price Range */}
               <FilterSection title="Price Range" defaultOpen={true} icon={CurrencyDollarIcon}>
                 <input
                   type="range"
@@ -489,7 +505,6 @@ const ListingPage = () => {
                 </div>
               </FilterSection>
 
-              {/* Seats */}
               <FilterSection title="Seats" defaultOpen={false} icon={FunnelIcon}>
                 {["4 Seats", "5 Seats", "7 Seats"].map((seat) => (
                   <label key={seat} className="flex items-center gap-3 py-1">
@@ -508,7 +523,6 @@ const ListingPage = () => {
                 ))}
               </FilterSection>
 
-              {/* Categories */}
               <FilterSection title="Car Category" defaultOpen={false} icon={FunnelIcon}>
                 {["HATCH BACK", "SEDAN", "PREMIUM SEDAN", "SUV", "MINIVAN"].map((cat) => (
                   <label key={cat} className="flex items-center gap-3 py-1">
@@ -530,7 +544,6 @@ const ListingPage = () => {
           </div>
         )}
 
-        {/* Overlay */}
         {isFilterOpen && (
           <div
             className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
@@ -542,7 +555,6 @@ const ListingPage = () => {
   );
 };
 
-// Desktop Filter Section (Unchanged)
 const FilterSection = ({ title, defaultOpen, children, icon: Icon }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   return (
@@ -568,34 +580,30 @@ const FilterSection = ({ title, defaultOpen, children, icon: Icon }) => {
   );
 };
 
-// Responsive ItemCard (Desktop + Mobile)
 const ItemCard = ({ item }) => {
   const [showDetails, setShowDetails] = useState(false);
   const navigate = useNavigate();
   const { searchResult, setSearchFormData } = useSearch();
 
   const handleBookNow = () => {
-  // Save distance
-  setSearchFormData((prev) => ({
-    ...prev,
-    distance: searchResult.data?.distance || 0,
-  }));
+    setSearchFormData((prev) => ({
+      ...prev,
+      distance: searchResult.data?.distance || 0,
+    }));
 
-  // Find original category from searchResult
-  const originalCategory = searchResult.data.categories.find(
-    cat => cat._id === item.id
-  );
+    const originalCategory = searchResult.data.categories.find(
+      cat => cat._id === item.id
+    );
 
-  // Send full API response + mapped item
-  const bookingItem = {
-    ...item,
-    data: {
-      categories: [originalCategory] // ← YEH ADD KARO!
-    }
+    const bookingItem = {
+      ...item,
+      data: {
+        categories: [originalCategory]
+      }
+    };
+
+    navigate("/booking-details", { state: { item: bookingItem } });
   };
-
-  navigate("/booking-details", { state: { item: bookingItem } });
-};
 
   if (item.type === "activity") {
     return (

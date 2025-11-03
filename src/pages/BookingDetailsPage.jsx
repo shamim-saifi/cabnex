@@ -203,6 +203,7 @@ const BookingDetailsPage = () => {
       totalAmount: totalAmount,
       city: travellerInfo.pickupLocation.name.split(',')[0]?.trim() || 'Unknown',
       oneWay,
+      ...(serviceType === 'transfer' && { transferDirection: searchFormData.transferDirection }),
       user: {
         _id: user?._id || null,
         fullName: isBookingForOther ? alternateName : travellerInfo.name,
