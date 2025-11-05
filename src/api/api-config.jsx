@@ -22,7 +22,8 @@ const endpoints = {
   carcategory: "/api/v1/admin/car-categories",
   travelpackage: "/api/v1/package/activity",
   search:"/api/v1/auth/search",
-  travelpackeagebooking:"/api/v1//auth/travel-query",
+  travelpackagebooking:"/api/v1/auth/travel-query",
+  Dashboardstats:"/api/v1/vendor/dashboard",
 };
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';

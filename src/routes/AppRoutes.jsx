@@ -26,29 +26,34 @@ import AccessibilityPage from '../pages/legal/AccessibilityPage';
 import PaymentPolicyPage from '../pages/legal/PaymentPolicyPage';
 import ContactUsPage from '../pages/ContactUsPage';
 
+import AllBookingsPage from '../vendor/pages/AllBookingsPage';
+
+import EditCar from '../vendor/pages/EditCar';
+
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/explore-packages" element={<ExplorePackages />} />
-      <Route path="/services" element={<MobilitySolutionsPage />} />
-      <Route path="/about" element={<AboutUsPage />} />
-      <Route path="/our-team" element={<OurTeamPage />} />
-      <Route path="/contact" element={<ContactUsPage />} />
-      <Route path="/success" element={<SuccessPage />} />
-      <Route path="/success/:bookingId" element={<SuccessPage />} />
-      <Route path="/car-listing" element={<CarListing />} />
-      <Route path="/booking-details" element={<CardDetails />} /> {/* Corrected path */}
-      <Route path="/profile" element={<MyProfilePage />} /> {/* Add route */}
-      <Route path="/my-bookings" element={<MyBookingsPage />} /> {/* Add route */}
-      <Route path="/my-booking-detail" element={<MyBookingDetailPage />} />
       <Route path="/vendor-login" element={<VendorLogin />} />
       <Route path="/vendor-registration" element={<VendorRegistration />} />
+      <Route path="/car-listing" element={<CarListing />} />
+      <Route path="/booking-details" element={<CardDetails />} />
+      <Route path="/explore-packages" element={<ExplorePackages />} />
+      <Route path="/success" element={<SuccessPage />} />
+      <Route path="/profile" element={<MyProfilePage />} />
+      <Route path="/my-bookings" element={<MyBookingsPage />} />
+      <Route path="/my-booking-detail/:id" element={<MyBookingDetailPage />} />
+      <Route path="/mobility-solutions" element={<MobilitySolutionsPage />} />
+      <Route path="/about-us" element={<AboutUsPage />} />
+      <Route path="/our-team" element={<OurTeamPage />} />
       <Route path="/terms-and-conditions" element={<TermAndConditionPage />} />
       <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
       <Route path="/legal-notice" element={<LegalNoticePage />} />
       <Route path="/accessibility" element={<AccessibilityPage />} />
       <Route path="/payment-policy" element={<PaymentPolicyPage />} />
+      <Route path="/contact-us" element={<ContactUsPage />} />
+
+      {/* Vendor Routes */}
       <Route
         path="/vendor"
         element={
@@ -60,11 +65,12 @@ const AppRoutes = () => {
         <Route index element={<VendorDashboardHome />} />
         <Route path="add-car" element={<VendorAddcar />} />
         <Route path="car-list" element={<VendorCarList />} />
+        <Route path="edit-car/:carId" element={<EditCar />} />
         <Route path="profile" element={<VendorProfile />} />
-      </Route>
-      <Route path="*" element={<h1 className="text-center mt-10">Page Not Found</h1>} />
-    </Routes>
-  );
-};
-
-export default AppRoutes;
+        <Route path="bookings" element={<AllBookingsPage />} />
+            </Route>
+          </Routes>
+        );
+      };
+      
+      export default AppRoutes;

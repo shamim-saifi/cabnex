@@ -27,7 +27,7 @@ function BookingModal({ isOpen, onClose, packageTitle }) {
     setSuccess(false);
 
     try {
-      const response = await api.post('/api/v1//auth/travel-query', {
+      const response = await api.post('/api/v1/auth/travel-query', {
         fullName: formData.fullName,
         email: formData.email,
         phone: formData.phone,

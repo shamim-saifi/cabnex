@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { FaEnvelope, FaLock, FaKey } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import logo from '../../assets/logo/logo-cab.png';
 import loginImg from '../../assets/vendor/riseter.png';
 import { api } from '../../api/api-config';
 
+import { useVendorAuth } from "../context/VendorAuthContext";
+
 export default function VendorLogin() {
+  const { setVendorUser, setIsVendorLoggedIn } = useVendorAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     identifier: '',
@@ -177,10 +181,9 @@ export default function VendorLogin() {
       const response = await api.post('/api/v1/vendor/login', payload);
       console.log('Login response:', JSON.stringify(response.data, null, 2));
       if (response.data.statusCode === 200 && response.data.success) {
-        console.log('Login successful, storing username and redirecting...');
-        localStorage.setItem('vendorToken', response.data.data.token);
-        localStorage.setItem('vendorName', response.data.data.contactPerson || 'Vendor');
-        console.log('Stored vendorName:', localStorage.getItem('vendorName'));
+        console.log('Login successful, redirecting...');
+        setVendorUser(response.data.data);
+        setIsVendorLoggedIn(true);
         alert(`Vendor login successful at ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', hour12: true })}!`);
         setFormData({
           identifier: '',

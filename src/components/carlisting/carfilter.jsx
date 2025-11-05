@@ -591,7 +591,7 @@ const ItemCard = ({ item }) => {
       distance: searchResult.data?.distance || 0,
     }));
 
-    const originalCategory = searchResult.data.categories.find(
+    const originalCategory = searchResult?.data?.categories?.find(
       cat => cat._id === item.id
     );
 

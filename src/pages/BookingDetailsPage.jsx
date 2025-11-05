@@ -103,22 +103,39 @@ const BookingDetailsPage = () => {
   const serviceType = searchFormData.serviceType || 'outstation';
   let pickupLocation = { name: 'Not specified', place_id: null };
   let dropoffLocation = { name: 'Not specified', place_id: null };
+  let pickupDateTimeForState = null;
+  let dropoffDateTimeForState = null;
 
   if (serviceType === 'rental') {
     pickupLocation = searchFormData.pickupLocation || searchFormData.selectedPlaces?.rentalPickup || pickupLocation;
     dropoffLocation = searchFormData.dropoffLocation || searchFormData.selectedPlaces?.rentalDropoff || pickupLocation;
+    pickupDateTimeForState = searchFormData.pickupDateTime;
   } else if (serviceType === 'city_taxi') {
     pickupLocation = searchFormData.pickupLocation || searchFormData.selectedPlaces?.cityTaxiPickup || pickupLocation;
     dropoffLocation = searchFormData.dropoffLocation || searchFormData.selectedPlaces?.cityTaxiDropoff || dropoffLocation;
+    pickupDateTimeForState = searchFormData.pickupDateTime;
   } else if (serviceType === 'transfer') {
     pickupLocation = searchFormData.pickupLocation || searchFormData.selectedPlaces?.transferFrom || pickupLocation;
     dropoffLocation = searchFormData.dropoffLocation || searchFormData.selectedPlaces?.transferTo || dropoffLocation;
+    pickupDateTimeForState = searchFormData.transferDateTime;
   } else if (serviceType === 'outstation') {
-    pickupLocation = searchFormData.pickupLocation || searchFormData.selectedPlaces?.outstationPickup || pickupLocation;
-    dropoffLocation = searchFormData.dropoffLocation || searchFormData.selectedPlaces?.outstationDropoff || dropoffLocation;
+    if (searchFormData.outstationTripType === 'multicity' && searchFormData.multicityStops?.length > 0) {
+      const firstStop = searchFormData.multicityStops[0];
+      const lastStop = searchFormData.multicityStops[searchFormData.multicityStops.length - 1];
+      pickupLocation = { name: firstStop.selectedPickupAddress, place_id: firstStop.pickupPlaceId };
+      dropoffLocation = { name: lastStop.selectedDropoffAddress, place_id: lastStop.dropoffPlaceId };
+      pickupDateTimeForState = firstStop.dateTime;
+      dropoffDateTimeForState = lastStop.dateTime;
+    } else {
+      pickupLocation = searchFormData.pickupLocation || searchFormData.selectedPlaces?.outstationPickup || pickupLocation;
+      dropoffLocation = searchFormData.dropoffLocation || searchFormData.selectedPlaces?.outstationDropoff || dropoffLocation;
+      pickupDateTimeForState = searchFormData.outstationPickupDateTime;
+      dropoffDateTimeForState = searchFormData.outstationReturnDateTime;
+    }
   } else if (serviceType === 'activity') {
     pickupLocation = searchFormData.pickupLocation || searchFormData.selectedPlaces?.activityLocation || pickupLocation;
     dropoffLocation = pickupLocation;
+    pickupDateTimeForState = searchFormData.activityDateTime;
   }
 
   const [travellerInfo, setTravellerInfo] = useState({
@@ -127,20 +144,11 @@ const BookingDetailsPage = () => {
     email: user?.email || '',
     exactPickupLocation: '',
     pickupLocation,
-    pickupDate: formatDate(
-      searchFormData.pickupDate ||
-        searchFormData.outstationPickupDateTime ||
-        searchFormData.transferDateTime ||
-        searchFormData.pickupDateTime ||
-        searchFormData.activityDateTime
-    ),
-    pickupTime: formatTime(
-      searchFormData.pickupDateTime ||
-        searchFormData.outstationPickupDateTime ||
-        searchFormData.transferDateTime ||
-        searchFormData.activityDateTime
-    ),
+    pickupDate: formatDate(pickupDateTimeForState),
+    pickupTime: formatTime(pickupDateTimeForState),
     dropoffLocation,
+    dropoffDate: formatDate(dropoffDateTimeForState),
+    dropoffTime: formatTime(dropoffDateTimeForState),
   });
 
   const [isBookingForOther, setIsBookingForOther] = useState(false);
@@ -190,10 +198,18 @@ const BookingDetailsPage = () => {
         address: travellerInfo.pickupLocation.name,
         place_id: travellerInfo.pickupLocation.place_id || null,
       },
-      destinations: showDropoff ? [{
-        address: travellerInfo.dropoffLocation.name,
-        place_id: travellerInfo.dropoffLocation.place_id || null,
-      }] : [],
+      destinations:
+        serviceType === 'outstation' && searchFormData.outstationTripType === 'multicity'
+          ? searchFormData.multicityStops.map(stop => ({
+              address: stop.selectedDropoffAddress,
+              place_id: stop.dropoffPlaceId || null,
+            }))
+          : showDropoff
+          ? [{
+              address: travellerInfo.dropoffLocation.name,
+              place_id: travellerInfo.dropoffLocation.place_id || null,
+            }]
+          : [],
       returnDateTime: serviceType === 'outstation' && searchFormData.outstationTripType === 'round-trip'
         ? searchFormData.outstationReturnDateTime
         : serviceType === 'outstation' && searchFormData.outstationTripType === 'multicity' && searchFormData.multicityStops.length > 0
@@ -342,9 +358,11 @@ const BookingDetailsPage = () => {
 
               {[
                 { icon: MapPinIcon, label: 'Pickup Location', value: travellerInfo.pickupLocation?.name },
-                dropoffLocation.name !== 'Not specified' && { icon: MapPinIcon, label: 'Drop-off Location', value: dropoffLocation.name },
+                travellerInfo.dropoffLocation.name !== 'Not specified' && { icon: MapPinIcon, label: 'Drop-off Location', value: travellerInfo.dropoffLocation.name },
                 { icon: CalendarIcon, label: 'Pickup Date', value: travellerInfo.pickupDate },
                 { icon: ClockIcon, label: 'Pickup Time', value: travellerInfo.pickupTime },
+                travellerInfo.dropoffDate !== 'Not specified' && { icon: CalendarIcon, label: 'Final Drop-off Date', value: travellerInfo.dropoffDate },
+                travellerInfo.dropoffTime !== 'Not specified' && { icon: ClockIcon, label: 'Final Drop-off Time', value: travellerInfo.dropoffTime },
               ].filter(Boolean).map(({ icon: Icon, label, value }, i) => (
                 <div key={i} className="flex items-center gap-3">
                   <Icon className="h-6 w-6 text-[#5143D9] flex-shrink-0" />

@@ -51,13 +51,16 @@ export const SearchProvider = ({ children }) => {
   });
 
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    const userData = localStorage.getItem('userData');
+    const userData = Cookies.get('userData') || localStorage.getItem('userData');
     const userName = Cookies.get('userName');
     return !!(userData || userName);
   });
 
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('userData');
+    let savedUser = Cookies.get('userData');
+    if (!savedUser) {
+      savedUser = localStorage.getItem('userData');
+    }
     if (savedUser) {
       try {
         return JSON.parse(savedUser);
@@ -80,14 +83,7 @@ export const SearchProvider = ({ children }) => {
     }
   }, [searchResult]);
 
-  // SAVE user
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem('userData', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('userData');
-    }
-  }, [user]);
+
 
   return (
     <SearchContext.Provider
