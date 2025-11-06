@@ -15,7 +15,7 @@ const AllBookingsPage = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await api.get('/api/v1/vendor/booking');
+        const response = await api.get('/api/v1/vendor/bookings');
         if (response.data.success) {
           setBookings(response.data.data);
           const bookingId = location.state?.bookingId;

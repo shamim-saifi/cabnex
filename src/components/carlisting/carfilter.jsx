@@ -78,28 +78,31 @@ const ListingPage = () => {
           showAdults: false,
         });
 
-        const mappedActivities = activities.map((act, idx) => ({
-          id: act._id || idx,
-          type: "activity",
-          image:
-            act.images && act.images.length > 0
-              ? act.images[0].url
-              : "https://via.placeholder.com/300x200?text=Activity+Image",
-          name: act.title || "Unnamed Activity",
-          description: act.description || "No description available",
-          actualPrice:
-            act.pricingOptions && act.pricingOptions.length > 0
-              ? act.pricingOptions[0].price || 0
-              : 0,
-          inclusions:
-            act.includes && act.includes.length > 0
-              ? act.includes
-              : [
-                  { text: "Guided Tour", icon: "CheckCircleIcon" },
-                  { text: "Entry Fees Included", icon: "MapPinIcon" },
-                ],
-          cancellationPolicy: act.cancellationPolicy || "Non-refundable",
-        }));
+        const mappedActivities = activities.map((act, idx) => {
+          const activityData = act._doc || act;
+          return {
+            id: activityData._id || idx,
+            type: "activity",
+            image:
+              activityData.images && activityData.images.length > 0
+                ? activityData.images[0].url
+                : "https://via.placeholder.com/300x200?text=Activity+Image",
+            name: activityData.title || "Unnamed Activity",
+            description: activityData.description || "No description available",
+            actualPrice:
+              activityData.pricingOptions && activityData.pricingOptions.length > 0
+                ? activityData.pricingOptions[0].price
+                : activityData.price || 0,
+            inclusions:
+              activityData.includes && activityData.includes.length > 0
+                ? activityData.includes
+                : [
+                    { text: "Guided Tour", icon: "CheckCircleIcon" },
+                    { text: "Entry Fees Included", icon: "MapPinIcon" },
+                  ],
+            cancellationPolicy: activityData.cancellationPolicy || "Non-refundable",
+          };
+        });
 
         setItems(mappedActivities);
         setFilteredItems(mappedActivities);
@@ -204,7 +207,10 @@ const ListingPage = () => {
   }, [searchResult, setSearchResult]);
 
   useEffect(() => {
-    if (isActivity) return;
+    if (items.length === 0 || items[0].type === 'activity') {
+        setFilteredItems(items);
+        return;
+    }
 
     let tempItems = [...items];
     tempItems = tempItems.filter(
@@ -223,7 +229,7 @@ const ListingPage = () => {
     }
     setFilteredItems(tempItems);
     setCurrentPage(1);
-  }, [priceRange, selectedSeats, selectedCategories, items, isActivity]);
+  }, [priceRange, selectedSeats, selectedCategories, items]);
 
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -292,13 +298,13 @@ const ListingPage = () => {
                     <h2 className="text-xl font-semibold">Filters</h2>
                   </div>
                   <div className="mt-3 relative">
-                    <input
+                    {/* <input
                       type="text"
                       placeholder="Search ......"
                       className="w-full bg-[#F5F5F6] border-none rounded-full py-2 px-4 text-md pl-10"
                       style={{ borderRadius: "30px" }}
                     />
-                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" /> */}
                   </div>
                 </div>
                 <div className="space-y-3">
@@ -482,12 +488,13 @@ const ListingPage = () => {
 
             <div className="p-5 space-y-6 overflow-y-auto h-full pb-20">
               <div className="relative">
-                <input
+                {/* <input
                   type="text"
                   placeholder="Search cars..."
                   className="w-full bg-gray-100 rounded-full py-3 px-4 pl-12 text-sm"
                 />
                 <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
+               */}
               </div>
 
               <FilterSection title="Price Range" defaultOpen={true} icon={CurrencyDollarIcon}>
@@ -586,28 +593,44 @@ const ItemCard = ({ item }) => {
   const { searchResult, setSearchFormData } = useSearch();
 
   const handleBookNow = () => {
-    setSearchFormData((prev) => ({
-      ...prev,
-      distance: searchResult.data?.distance || 0,
-    }));
+    if (item.type === 'activity') {
+      const originalActivity = searchResult?.data?.activities?.find(
+        act => (act._doc?._id || act._id) === item.id
+      );
 
-    const originalCategory = searchResult?.data?.categories?.find(
-      cat => cat._id === item.id
-    );
+      const bookingItem = {
+        ...item,
+        // Ensure the full activity data is passed, handling the _doc structure
+        data: originalActivity?._doc || originalActivity,
+      };
+      
+      navigate('/booking-details', { state: { item: bookingItem } });
 
-    const bookingItem = {
-      ...item,
-      data: {
-        categories: [originalCategory]
-      }
-    };
+    } else {
+      // Existing logic for car bookings
+      setSearchFormData((prev) => ({
+        ...prev,
+        distance: searchResult.data?.distance || 0,
+      }));
 
-    navigate("/booking-details", { state: { item: bookingItem } });
+      const originalCategory = searchResult?.data?.categories?.find(
+        cat => cat._id === item.id
+      );
+
+      const bookingItem = {
+        ...item,
+        data: {
+          categories: [originalCategory]
+        }
+      };
+
+      navigate("/booking-details", { state: { item: bookingItem } });
+    }
   };
 
   if (item.type === "activity") {
     return (
-      <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-200 hover:shadow-lg transition lg:p-0">
+      <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-200 hover:shadow-lg transition ">
         {/* Mobile Layout */}
         <div className="lg:hidden">
           <div className="h-48 bg-[#F5F5F6] rounded-t-2xl flex items-center justify-center p-4">
@@ -627,7 +650,6 @@ const ItemCard = ({ item }) => {
             <p className="text-xs text-gray-500">
               Cancellation: {item.cancellationPolicy}
             </p>
-            {item.actualPrice > 0 && (
               <div className="flex justify-between items-center">
                 <p className="text-2xl font-extrabold font-grotesk">
                   ₹{item.actualPrice.toLocaleString("en-IN")}
@@ -639,7 +661,6 @@ const ItemCard = ({ item }) => {
                   Book Now
                 </button>
               </div>
-            )}
             {item.inclusions.length > 0 && (
               <>
                 <button
@@ -677,7 +698,7 @@ const ItemCard = ({ item }) => {
         </div>
 
         {/* Desktop Layout */}
-        <div className="hidden lg:flex gap-6 mb-4">
+        <div className="hidden lg:flex gap-6 mb-4 p-3">
           <div className="w-1/4 bg-[#F5F5F6] rounded-2xl px-5 py-7 h-40 flex justify-center items-center">
             <img
               src={item.image}
@@ -697,11 +718,9 @@ const ItemCard = ({ item }) => {
             <p className="mt-2 text-gray-600 font-semibold">
               Cancellation Policy: {item.cancellationPolicy}
             </p>
-            {item.actualPrice > 0 && (
-              <p className="mt-2 text-2xl font-grotesk font-bold text-black">
+            <p className="mt-2 text-2xl font-grotesk font-bold text-black">
                 ₹{item.actualPrice.toLocaleString("en-IN")}
               </p>
-            )}
           </div>
         </div>
         <div className="hidden lg:flex justify-end">
@@ -763,7 +782,7 @@ const ItemCard = ({ item }) => {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-200 hover:shadow-lg transition lg:p-0">
+    <div className="bg-white rounded-2xl shadow-md p-5 border border-gray-200 hover:shadow-lg transition l">
       {/* Mobile Layout */}
       <div className="lg:hidden">
         <div className="h-48 bg-[#F5F5F6] rounded-t-2xl flex items-center justify-center p-4">
@@ -878,7 +897,7 @@ const ItemCard = ({ item }) => {
           </div>
           <div className="flex items-center gap-2">
             <p className="text-3xl font-grotesk font-extrabold text-black">
-              ₹{item.actualPrice}
+              ₹{item.actualPrice.toLocaleString("en-IN")}
             </p>
           </div>
           <button

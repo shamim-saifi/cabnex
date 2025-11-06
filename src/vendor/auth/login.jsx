@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaEnvelope, FaLock, FaKey } from "react-icons/fa";
+import { FaEnvelope, FaLock, FaKey, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import logo from '../../assets/logo/logo-cab.png';
@@ -26,6 +26,8 @@ export default function VendorLogin() {
   const [forgotErrors, setForgotErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -260,7 +262,7 @@ export default function VendorLogin() {
                     <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" aria-hidden="true" />
                     <input
                       id="password"
-                      type="password"
+                      type={showPassword ? 'text' : 'password'}
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
@@ -269,6 +271,13 @@ export default function VendorLogin() {
                       }`}
                       placeholder="Enter your password"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
                     {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                   </div>
                 </div>
@@ -401,7 +410,7 @@ export default function VendorLogin() {
                     <FaKey className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" aria-hidden="true" />
                     <input
                       id="new-password"
-                      type="password"
+                      type={showNewPassword ? 'text' : 'password'}
                       name="newPassword"
                       value={forgotData.newPassword}
                       onChange={handleForgotChange}
@@ -410,6 +419,13 @@ export default function VendorLogin() {
                       }`}
                       placeholder="Enter new password (min 8 characters)"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
                   </div>
                   {forgotErrors.newPassword && <p className="text-red-500 text-sm mt-1">{forgotErrors.newPassword}</p>}
                 </div>

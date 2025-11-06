@@ -30,6 +30,7 @@ import {
   PhoneIcon,
   PlayCircleIcon,
 } from "@heroicons/react/20/solid";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import Cookies from "js-cookie";
@@ -46,31 +47,31 @@ const services = [
   {
     name: "Leisure & Holiday Travel",
     description: "Explore South India in comfort and style.",
-    href: "/services#leisure",
+    href: "/mobility-solutions",
     icon: GlobeAltIcon,
   },
   {
     name: "Corporate Travel",
     description: "Dependable mobility solutions for your business.",
-    href: "/services#corporate",
+    href: "/mobility-solutions",
     icon: BriefcaseIcon,
   },
   {
     name: "Events & Delegations",
     description: "Seamless multi-vehicle coordination for groups.",
-    href: "/services#events",
+    href: "/mobility-solutions",
     icon: UsersIcon,
   },
   {
     name: "City & Sightseeing Tours",
     description: "Discover the best of every destination.",
-    href: "/services#sightseeing",
+    href: "/mobility-solutions",
     icon: CameraIcon,
   },
     {
     name: "MICE Transport",
     description: "Tailored ground transport for large events.",
-    href: "/services#mice",
+    href: "/mobility-solutions",
     icon: CalendarIcon,
   },
 ];
@@ -111,6 +112,9 @@ export default function Header() {
   const [forgotOtp, setForgotOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [isLoadingUser, setIsLoadingUser] = useState(true);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -549,7 +553,7 @@ export default function Header() {
                 </div>
               </PopoverPanel>
             </Popover>
-            <Link to="/about" className="text-md font-grotesk font-semibold text-black">
+            <Link to="/about-us" className="text-md font-grotesk font-semibold text-black">
               About Us
             </Link>
           </PopoverGroup>
@@ -724,18 +728,18 @@ export default function Header() {
                       ))}
                     </DisclosurePanel>
                   </Disclosure>
-                  <a
-                    href="#"
+                  <Link
+                    to="/about-us"
                     className="block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                   >
                     About
-                  </a>
-                  <a
-                    href="#"
+                  </Link>
+                  <Link
+                    to="/contact-us"
                     className="block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                   >
                     Contact
-                  </a>
+                  </Link>
                 </div>
                 <div className="py-6">
                   {isLoggedIn && user && (
@@ -873,12 +877,23 @@ export default function Header() {
                       />
                       <input
                         id="password"
-                        type="password"
+                        type={showLoginPassword ? 'text' : 'password'}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="block w-full py-3 px-5 pl-10 rounded-full border-gray-200 border focus:border-[#FF6900] focus:ring focus:ring-[#FF6900] focus:ring-opacity-50"
                         placeholder="Enter your password"
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowLoginPassword(!showLoginPassword)}
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      >
+                        {showLoginPassword ? (
+                          <EyeSlashIcon className="h-5 w-5" />
+                        ) : (
+                          <EyeIcon className="h-5 w-5" />
+                        )}
+                      </button>
                     </div>
                   </div>
                   {loginError && (
@@ -1106,12 +1121,23 @@ export default function Header() {
                         />
                         <input
                           id="reg-password"
-                          type="password"
+                          type={showRegisterPassword ? 'text' : 'password'}
                           value={registerPassword}
                           onChange={(e) => setRegisterPassword(e.target.value)}
                           className="block w-full py-3 px-5 pl-10 rounded-full border-gray-200 border focus:border-[#FF6900] focus:ring focus:ring-[#FF6900] focus:ring-opacity-50"
                           placeholder="Enter your password"
                         />
+                        <button
+                          type="button"
+                          onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                        >
+                          {showRegisterPassword ? (
+                            <EyeSlashIcon className="h-5 w-5" />
+                          ) : (
+                            <EyeIcon className="h-5 w-5" />
+                          )}
+                        </button>
                       </div>
                     </div>
                     <div className="relative w-full">
@@ -1375,12 +1401,23 @@ export default function Header() {
                         />
                         <input
                           id="new-password"
-                          type="password"
+                          type={showNewPassword ? 'text' : 'password'}
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
                           className="block w-full py-3 px-5 pl-10 rounded-full border-gray-200 border focus:border-[#FF6900] focus:ring focus:ring-[#FF6900] focus:ring-opacity-50"
                           placeholder="Enter new password (min 8 characters)"
                         />
+                        <button
+                          type="button"
+                          onClick={() => setShowNewPassword(!showNewPassword)}
+                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                        >
+                          {showNewPassword ? (
+                            <EyeSlashIcon className="h-5 w-5" />
+                          ) : (
+                            <EyeIcon className="h-5 w-5" />
+                          )}
+                        </button>
                       </div>
                     </div>
                   )}

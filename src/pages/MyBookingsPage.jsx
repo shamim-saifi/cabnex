@@ -3,7 +3,7 @@ import { useSearch } from '../context/SearchContext';
 import Header from '../components/header';
 import { toast } from 'sonner';
 import { api } from '../api/api-config';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { CalendarIcon, MapPinIcon, ClockIcon } from '@heroicons/react/24/outline';
 
 const MyBookingsPage = () => {
@@ -13,18 +13,28 @@ const MyBookingsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleView = (booking) => {
-    navigate('/my-booking-detail', { state: { item: booking } });
+    navigate(`/my-booking-detail/${booking.bookingId}`, { state: { item: booking } });
   };
 
   // Tabs definition
-  const tabs = [
-    { id: 'all', label: 'All', icon: 'All' },
-    { id: 'transfer', label: 'Transfer', icon: 'Transfer' },
-    { id: 'outstation', label: 'Outstation', icon: 'Outstation' },
-    { id: 'local', label: 'Local', icon: 'Local' },
+  const serviceTypeTabs = [
+    { id: 'all', label: 'All' },
+    { id: 'rental', label: 'Rental' },
+    { id: 'outstation', label: 'Outstation' },
+    { id: 'transfer', label: 'Transfer' },
+    { id: 'activity', label: 'Activity' },
+  ];
+
+  const statusTabs = [
+    { id: 'all', label: 'All Statuses' },
+    { id: 'pending', label: 'Pending' },
+    { id: 'confirmed', label: 'Completed' },
+    { id: 'cancelled', label: 'Cancelled' },
   ];
 
   useEffect(() => {
@@ -42,7 +52,9 @@ const MyBookingsPage = () => {
             (a, b) => new Date(b.pickupDateTime) - new Date(a.pickupDateTime)
           );
           setBookings(sortedBookings);
-          setFilteredBookings(sortedBookings); // default: all
+          if (location.state?.status) {
+            setStatusFilter(location.state.status);
+          }
         } else {
           setError(response.data.message || 'Failed to fetch bookings.');
           toast.error(response.data.message || 'Failed to fetch bookings.');
@@ -59,18 +71,24 @@ const MyBookingsPage = () => {
     if (isLoggedIn) {
       fetchBookings();
     }
-  }, [user, isLoggedIn]);
+  }, [user, isLoggedIn, location.state]);
 
   // Filter bookings when tab changes
   useEffect(() => {
-    if (activeTab === 'all') {
-      setFilteredBookings(bookings);
-    } else {
-      setFilteredBookings(
-        bookings.filter(booking => booking.serviceType?.toLowerCase() === activeTab)
-      );
+    let filtered = bookings;
+
+    // Filter by service type (activeTab)
+    if (activeTab !== 'all') {
+      filtered = filtered.filter(booking => booking.serviceType?.toLowerCase() === activeTab);
     }
-  }, [activeTab, bookings]);
+
+    // Filter by status (statusFilter)
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(booking => booking.status?.toLowerCase() === statusFilter);
+    }
+
+    setFilteredBookings(filtered);
+  }, [activeTab, statusFilter, bookings]);
 
   const handleCancel = async (booking) => {
     const { bookingId, _id, status } = booking;
@@ -189,9 +207,9 @@ const MyBookingsPage = () => {
       <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-12 mt-20">
         <h1 className="text-3xl font-extrabold text-gray-900 mb-6">My Bookings</h1>
 
-        {/* Tabs */}
-        <div className="flex flex-wrap gap-2 mb-8 border-b border-gray-200">
-          {tabs.map(tab => (
+        {/* Service Type Tabs */}
+        <div className="flex flex-wrap gap-2 mb-4 border-b border-gray-200">
+          {serviceTypeTabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
@@ -199,6 +217,23 @@ const MyBookingsPage = () => {
                 activeTab === tab.id
                   ? 'border-orange-500 text-orange-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Status Filter Tabs */}
+        <div className="flex flex-wrap gap-2 mb-8">
+          {statusTabs.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setStatusFilter(tab.id)}
+              className={`px-4 py-1.5 rounded-full font-grotesk text-sm font-medium transition-colors ${
+                statusFilter === tab.id
+                  ? 'bg-orange-500 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
               {tab.label}

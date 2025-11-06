@@ -32,44 +32,6 @@ const MyBookingDetailPage = () => {
   const pickupDate = new Date(pickupDateTime);
 
   
-const handleDelete = async (booking) => {
-  const { bookingId, _id, status } = booking;
-
-  if (status !== 'pending') {
-    toast.error("Only pending bookings can be cancelled.");
-    return;
-  }
-
-  const confirmed = window.confirm(`Cancel booking ${bookingId}?`);
-  if (!confirmed) return;
-
-  console.log("Cancelling with bookingId:", bookingId); // Debug
-
-  try {
-    
-    // Use bookingId (CN-xxx), not _id
-    const response = await api.delete(`/api/v1/auth/bookings/${bookingId}`);
-
-    if (response.data.success) {
-      // Remove from UI using _id (local state)
-      setBookings(prev => prev.filter(b => b._id !== _id));
-
-      toast.dismiss(loadingToast);
-      toast.success(`Booking ${bookingId} cancelled!`);
-    }
-  } catch (err) {
-    console.error("Cancel error:", err.response?.data);
-
-    const msg = err.response?.data?.message || "Failed to cancel";
-    toast.error(msg);
-
-    // If 404 → maybe already cancelled → remove anyway
-    if (err.response?.status === 404) {
-      setBookings(prev => prev.filter(b => b._id !== _id));
-      toast.info("Booking no longer exists.");
-    }
-  }
-};
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <Header />
@@ -81,10 +43,6 @@ const handleDelete = async (booking) => {
               <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 font-grotesk">Booking Invoice</h2>
               <p className="text-sm text-gray-500 mt-1">Booking ID: {bookingId}</p>
             </div>
-            <button onClick={handleDelete} className="flex items-center gap-2 text-sm text-red-600 hover:text-red-800 font-semibold bg-red-100 hover:bg-red-200 px-3 py-2 rounded-lg">
-              <TrashIcon className="h-5 w-5" />
-              <span>Delete Booking</span>
-            </button>
           </div>
 
           {/* Booking Summary */}

@@ -114,9 +114,9 @@ export default function Footer() {
             <h4 className="text-2xl font-bold font-grotesk  mb-5">Quick Links</h4>
             <ul className="space-y-2 font-grotesk  text-sm">
               <li><Link to="/">Home</Link></li>
-              <li><Link to="/about">About Us</Link></li>
-              <li><Link to="/services">Service</Link></li>
-              <li><Link to="/contact">Contact Us</Link></li>
+              <li><Link to="/about-us">About Us</Link></li>
+              <li><Link to="/mobility-solutions">Service</Link></li>
+              <li><Link to="/contact-us">Contact Us</Link></li>
             </ul>
           </div>
 

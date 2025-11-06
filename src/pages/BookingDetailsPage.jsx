@@ -151,6 +151,9 @@ const BookingDetailsPage = () => {
     dropoffTime: formatTime(dropoffDateTimeForState),
   });
 
+
+
+
   const [isBookingForOther, setIsBookingForOther] = useState(false);
   const [alternateName, setAlternateName] = useState('');
   const [alternatePhone, setAlternatePhone] = useState('');
@@ -180,53 +183,77 @@ const BookingDetailsPage = () => {
 
     const pickupDateTimeStr = `${travellerInfo.pickupDate} ${travellerInfo.pickupTime}`;
     const pickupDateTimeISO = new Date(pickupDateTimeStr).toISOString();
-
+  console.log("Activity ID being sent:", item.data._id);
     const showDropoff = dropoffLocation.name !== 'Not specified';
-    const oneWay = serviceType === 'outstation' && 
-      (searchFormData.outstationTripType === 'round-trip' || searchFormData.outstationTripType === 'multicity')
-      ? false : true;
+    let paymentParams;
 
-    const paymentParams = {
-      amount: payAmount,
-      carCategoryName: isActivity ? selectedItem.name : selectedItem.name || 'Default Car',
-      serviceType,
-      packageType: serviceType === 'rental' ? searchFormData.rentalPackage || null : null,
-      packageId: null,
-      exactLocation: travellerInfo.exactPickupLocation,
-      pickupDateTime: pickupDateTimeISO,
-      startLocation: {
-        address: travellerInfo.pickupLocation.name,
-        place_id: travellerInfo.pickupLocation.place_id || null,
-      },
-      destinations:
-        serviceType === 'outstation' && searchFormData.outstationTripType === 'multicity'
-          ? searchFormData.multicityStops.map(stop => ({
-              address: stop.selectedDropoffAddress,
-              place_id: stop.dropoffPlaceId || null,
-            }))
-          : showDropoff
-          ? [{
-              address: travellerInfo.dropoffLocation.name,
-              place_id: travellerInfo.dropoffLocation.place_id || null,
-            }]
-          : [],
-      returnDateTime: serviceType === 'outstation' && searchFormData.outstationTripType === 'round-trip'
-        ? searchFormData.outstationReturnDateTime
-        : serviceType === 'outstation' && searchFormData.outstationTripType === 'multicity' && searchFormData.multicityStops.length > 0
-        ? searchFormData.multicityStops[searchFormData.multicityStops.length - 1].dateTime
-        : null,
-      distance: searchFormData.distance || 0,
-      totalAmount: totalAmount,
-      city: travellerInfo.pickupLocation.name.split(',')[0]?.trim() || 'Unknown',
-      oneWay,
-      ...(serviceType === 'transfer' && { transferDirection: searchFormData.transferDirection }),
-      user: {
-        _id: user?._id || null,
-        fullName: isBookingForOther ? alternateName : travellerInfo.name,
-        email: isBookingForOther ? alternateEmail : travellerInfo.email,
-        mobile: isBookingForOther ? alternatePhone : travellerInfo.mobile,
-      },
-    };
+    if (isActivity) {
+      paymentParams = {
+        amount: payAmount,
+        activityId: item.data._id, // Pass activity ID
+        serviceType: 'activity',
+        exactLocation: travellerInfo.exactPickupLocation,
+        pickupDateTime: pickupDateTimeISO,
+        startLocation: {
+          address: travellerInfo.pickupLocation.name,
+          place_id: travellerInfo.pickupLocation.place_id || null,
+        },
+        totalAmount: totalAmount,
+        city: travellerInfo.pickupLocation.name.split(',')[0]?.trim() || 'Unknown',
+        user: {
+          _id: user?._id || null,
+          fullName: isBookingForOther ? alternateName : travellerInfo.name,
+          email: isBookingForOther ? alternateEmail : travellerInfo.email,
+          mobile: isBookingForOther ? alternatePhone : travellerInfo.mobile,
+        },
+      };
+    } else {
+        const oneWay = serviceType === 'outstation' && 
+        (searchFormData.outstationTripType === 'round-trip' || searchFormData.outstationTripType === 'multicity')
+        ? false : true;
+
+      paymentParams = {
+        amount: payAmount,
+        carCategoryName: selectedItem.name || 'Default Car',
+        serviceType,
+        packageType: serviceType === 'rental' ? searchFormData.rentalPackage || null : null,
+        packageId: null,
+        exactLocation: travellerInfo.exactPickupLocation,
+        pickupDateTime: pickupDateTimeISO,
+        startLocation: {
+          address: travellerInfo.pickupLocation.name,
+          place_id: travellerInfo.pickupLocation.place_id || null,
+        },
+        destinations:
+          serviceType === 'outstation' && searchFormData.outstationTripType === 'multicity'
+            ? searchFormData.multicityStops.map(stop => ({
+                address: stop.selectedDropoffAddress,
+                place_id: stop.dropoffPlaceId || null,
+              }))
+            : showDropoff
+            ? [{
+                address: travellerInfo.dropoffLocation.name,
+                place_id: travellerInfo.dropoffLocation.place_id || null,
+              }]
+            : [],
+        returnDateTime: serviceType === 'outstation' && searchFormData.outstationTripType === 'round-trip'
+          ? searchFormData.outstationReturnDateTime
+          : serviceType === 'outstation' && searchFormData.outstationTripType === 'multicity' && searchFormData.multicityStops.length > 0
+          ? searchFormData.multicityStops[searchFormData.multicityStops.length - 1].dateTime
+          : null,
+        distance: searchFormData.distance || 0,
+        totalAmount: totalAmount,
+        city: travellerInfo.pickupLocation.name.split(',')[0]?.trim() || 'Unknown',
+        oneWay,
+        ...(serviceType === 'transfer' && { transferDirection: searchFormData.transferDirection }),
+        user: {
+          _id: user?._id || null,
+          fullName: isBookingForOther ? alternateName : travellerInfo.name,
+          email: isBookingForOther ? alternateEmail : travellerInfo.email,
+          mobile: isBookingForOther ? alternatePhone : travellerInfo.mobile,
+        },
+      };
+    }
 
     try {
       await loadRazorpay(paymentParams);
@@ -241,10 +268,10 @@ const BookingDetailsPage = () => {
   const apiCategory = item?.data?.categories?.[0];
 
   // Use API totalAmount, fallback to selectedItem.actualPrice
-  const totalAmount = apiCategory?.totalAmount || selectedItem.actualPrice;
+  const totalAmount = isActivity ? selectedItem.actualPrice : (apiCategory?.totalAmount || selectedItem.actualPrice);
 
   // taxSlab is percentage → NO 18% FALLBACK
-  const taxPercentage = apiCategory?.taxSlab || 0;
+  const taxPercentage = isActivity ? 0 : (apiCategory?.taxSlab || 0);
 
   // GST = total × tax% / 100
   const gstAmount = totalAmount * (taxPercentage / 100);
@@ -253,11 +280,11 @@ const BookingDetailsPage = () => {
   const baseFare = totalAmount - gstAmount;
 
   // Other charges
-  const extraKm = apiCategory?.extraKmCharge || 0;
-  const nightCharge = apiCategory?.nightCharge || 0;
-  const tollCharges = apiCategory?.tollCharges || 0;
-  const driverAllowance = apiCategory?.driverAllowance || 0;
-  const discount = apiCategory?.discount || 0;
+  const extraKm = isActivity ? 0 : (apiCategory?.extraKmCharge || 0);
+  const nightCharge = isActivity ? 0 : (apiCategory?.nightCharge || 0);
+  const tollCharges = isActivity ? 0 : (apiCategory?.tollCharges || 0);
+  const driverAllowance = isActivity ? 0 : (apiCategory?.driverAllowance || 0);
+  const discount = isActivity ? 0 : (apiCategory?.discount || 0);
 
   // ======================================================================
 
@@ -486,6 +513,7 @@ const BookingDetailsPage = () => {
           <div className="sticky top-4 space-y-4">
 
             {/* ==================== FARE BREAKDOWN CARD ==================== */}
+            {!isActivity && (
             <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm">
               <h4 className="font-grotesk font-extrabold text-lg mb-3 text-gray-800">Fare Breakdown</h4>
               <div className="space-y-2 text-sm font-grotesk">
@@ -553,6 +581,7 @@ const BookingDetailsPage = () => {
                 </div>
               </div>
             </div>
+            )}
 
             {/* ==================== PAYMENT OPTIONS CARD ==================== */}
             <div className="bg-[#F5F5F6] rounded-2xl p-5 border border-gray-200">

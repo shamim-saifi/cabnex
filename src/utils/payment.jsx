@@ -103,11 +103,11 @@ setTimeout(() => {
           } catch (err) {
             console.error('Verification Error:', err.response?.data || err);
             toast.error('Verification failed! Redirecting to failure page...');
-            // setTimeout(() => {
-            //   window.location.href = `${BASE_URL}/failure?reason=${encodeURIComponent(
-            //     err.response?.data?.message || 'network_error'
-            //   )}`;
-            // }, 2000);
+            setTimeout(() => {
+              window.location.href = `${BASE_URL}/failure?reason=${encodeURIComponent(
+                err.response?.data?.message || 'network_error'
+              )}`;
+            }, 2000);
           }
         },
         prefill: {

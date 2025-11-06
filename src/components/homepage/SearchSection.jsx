@@ -373,14 +373,14 @@ const SearchSection = ({ isUpdate = false, onUpdateComplete }) => {
             {tabs.map((tab, index, arr) => (
               <Tab
                 key={index}
-                className={`w-1/2 md:w-auto text-center px-6 py-3 font-grotesk text-md font-medium cursor-pointer backdrop-blur-xl bg-[#cdcdcd33] text-[#ffffff] hover:bg-black transition-colors ${
+                className={`w-1/2 md:w-auto text-center px-6 py-3 font-grotesk text-md font-medium cursor-pointer backdrop-blur-xl bg-black md:bg-[#cdcdcd33] text-[#ffffff] hover:bg-black transition-colors ${
                   index === 0
                     ? 'rounded-tl-3xl md:rounded-tl-3xl'
                     : index === arr.length - 1
                     ? 'rounded-tr-3xl md:rounded-tr-3xl'
                     : ''
                 }`}
-                selectedClassName="bg-orange-600 text-white"
+                selectedClassName="!bg-orange-600 text-white"
               >
                 {tab}
               </Tab>
