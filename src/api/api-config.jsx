@@ -24,6 +24,7 @@ const endpoints = {
   search:"/api/v1/auth/search",
   travelpackagebooking:"/api/v1/auth/travel-query",
   Dashboardstats:"/api/v1/vendor/dashboard",
+  WebsiteContent:"/api/v1/admin/website-setting",
 };
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';

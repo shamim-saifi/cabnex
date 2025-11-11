@@ -47,6 +47,21 @@ const AllBookingsPage = () => {
     setIsModalOpen(false);
   };
 
+  const handleCompleteBooking = async (bookingId) => {
+    try {
+      const response = await api.put(`/api/v1/vendor/bookings/${bookingId}`);
+      if (response.data.success) {
+        setBookings(bookings.map(b => b.bookingId === bookingId ? { ...b, status: 'completed' } : b));
+        toast.success('Booking marked as completed.');
+      } else {
+        toast.error(response.data.message || 'Failed to complete booking.');
+      }
+    } catch (error) {
+      console.error('Error completing booking:', error);
+      toast.error('An error occurred while completing the booking.');
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -73,12 +88,22 @@ const AllBookingsPage = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">{booking.carCategory}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">{new Date(booking.pickupDateTime).toLocaleDateString()}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${booking.status === 'confirmed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      booking.status === 'confirmed' ? 'bg-green-100 text-green-800' : 
+                      booking.status === 'completed' ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800'
+                    }`}>
                       {booking.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button onClick={() => handleViewBooking(booking)} className="text-indigo-600 hover:text-indigo-900">View</button>
+                    <button 
+                      onClick={() => handleCompleteBooking(booking.bookingId)} 
+                      className="ml-4 text-green-600 hover:text-green-900 disabled:text-gray-400 disabled:cursor-not-allowed"
+                      disabled={booking.status === 'completed'}
+                    >
+                      Complete Booking
+                    </button>
                   </td>
                 </tr>
               ))}

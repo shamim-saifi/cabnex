@@ -2,8 +2,10 @@ import React from "react";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import ScrollToTop from "../utils/scroll-to-top";
+import { useWebsiteSettings } from "../context/WebsiteSettingsContext";
 
 const ContactUsPage = () => {
+  const { settings } = useWebsiteSettings();
   return (
     <>
       <ScrollToTop />
@@ -131,7 +133,7 @@ const ContactUsPage = () => {
                     </svg>
                   </div>
                   <p className="ml-3 text-lg text-gray-700 font-grotesk">
-                    MIQB, C 25, Sector 58, Noida 201301
+                    {settings?.addresses && settings.addresses.length > 0 ? settings.addresses[0] : ''}
                   </p>
                 </div>
                 <div className="flex items-start">
@@ -152,7 +154,7 @@ const ContactUsPage = () => {
                     </svg>
                   </div>
                   <p className="ml-3 text-lg text-gray-700 font-grotesk">
-                    +91 96672 84400
+                    {settings?.contactPhone || ''}
                   </p>
                 </div>
                 <div className="flex items-start">
@@ -173,7 +175,7 @@ const ContactUsPage = () => {
                     </svg>
                   </div>
                   <p className="ml-3 text-lg text-gray-700 font-grotesk">
-                    info@cabnex.in
+                    {settings?.contactEmail || ''}
                   </p>
                 </div>
               </div>

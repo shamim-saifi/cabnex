@@ -230,7 +230,6 @@ const VendorDashboardHome = () => {
           </div>
         </div>
 
-        {/* RIGHT: Recent Bookings Table (60%) */}
         <div className="lg:col-span-7 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Recent Bookings</h3>

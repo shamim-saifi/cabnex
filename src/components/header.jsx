@@ -34,7 +34,7 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import Cookies from "js-cookie";
-import logo from "../assets/logo/logo-cab.png";
+import { useWebsiteSettings } from "../context/WebsiteSettingsContext";
 import loginImg from "../assets/login/login.jpg";
 import signupImg from "../assets/login/register.jpg";
 import { api, endpoints } from "../api/api-config";
@@ -86,6 +86,7 @@ const tourItineraries = [];
 const blogLinks = [];
 
 export default function Header() {
+  const { settings } = useWebsiteSettings();
   const { isLoggedIn, setIsLoggedIn, user, setUser } = useSearch();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
@@ -364,7 +365,7 @@ export default function Header() {
 
   // Vendor Registration Navigation
   const handleVendorRegister = () => {
-    navigate("/vendor-registration");
+    navigate("/vendor-login");
   };
 
   // Forgot Password: Step 1 - Send OTP
@@ -500,7 +501,7 @@ export default function Header() {
         >
           <div className="flex lg:flex-1">
             <a href="/" className="-m-1.5 rounded-2xl">
-              <img alt="logo" src={logo} className="h-16 w-auto" />
+              <img alt="logo" src={settings?.logo?.url || ''} className="h-16 w-auto" />
             </a>
           </div>
           <div className="flex lg:hidden">
@@ -642,7 +643,7 @@ export default function Header() {
             <div className="flex items-center justify-between">
               <a href="#" className="-m-1.5 p-1.5">
                 <span className="sr-only">Your Company</span>
-                <img alt="" src={logo} className="h-8 w-auto" />
+                <img alt="" src={settings?.logo?.url || ''} className="h-8 w-auto" />
               </a>
               <button
                 type="button"

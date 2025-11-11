@@ -65,7 +65,9 @@ const BookingDetailsModal = ({ booking, onClose }) => {
                     <div className="flex-shrink-0"><FaInfoCircle className="text-purple-500" /></div>
                     <div>
                         <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Status</p>
-                        <span className={`px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full ${booking.status === 'confirmed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                        <span className={`px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full ${
+                            booking.status === 'confirmed' || booking.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                        }`}>
                             {booking.status}
                         </span>
                     </div>
