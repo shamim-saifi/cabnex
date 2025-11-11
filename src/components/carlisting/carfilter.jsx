@@ -132,6 +132,7 @@ const ListingPage = () => {
             const marketFare = cat.marketFare || 0;
             const baseFare = cat.baseFare || 0;
             const totalAmount = cat.totalAmount || 0;
+            const perKmCharge = cat.perKmCharge || 0; // Add this line
 
             let seats = "5 Seats";
             if (categoryName.includes("HATCH")) seats = "4 Seats";
@@ -152,6 +153,7 @@ const ListingPage = () => {
               features: ["AC", "Automatic", "Petrol", seats],
               marketFare,
               baseFare,
+              perKmCharge,
               actualPrice: Math.round(totalAmount),
               seats,
               description: `Market Rate: ₹${marketFare}/km | Total: ₹${Math.round(
@@ -413,7 +415,7 @@ const ListingPage = () => {
           ) : (
             <>
               {currentFilteredItems.map((item) => (
-                <ItemCard key={item.id} item={item} />
+                <ItemCard key={item.id} item={item} serviceType={searchFormData.serviceType || 'rental'} />
               ))}
               <div className="flex justify-center items-center gap-2 mt-8 flex-wrap">
                 <button
@@ -587,7 +589,7 @@ const FilterSection = ({ title, defaultOpen, children, icon: Icon }) => {
   );
 };
 
-const ItemCard = ({ item }) => {
+const ItemCard = ({ item, serviceType }) => {
   const [showDetails, setShowDetails] = useState(false);
   const navigate = useNavigate();
   const { searchResult, setSearchFormData } = useSearch();
@@ -889,12 +891,14 @@ const ItemCard = ({ item }) => {
           <p className="mt-2 text-gray-600">{item.description}</p>
         </div>
         <div className="w-1/4 flex flex-col justify-center items-end text-right border-l border-[#d4d4d4]">
-          <div className="flex gap-2">
-            <p className="text-gray-600 font-grotesk line-through">
-              ₹{item.marketFare}/km
-            </p>
-            <p className="text-red-600">Base: ₹{item.baseFare}</p>
-          </div>
+          {serviceType !== 'transfer' && (
+            <div className="flex gap-2">
+              <p className="text-gray-600 font-grotesk line-through">
+                ₹{item.marketFare}/km
+              </p>
+              <p className="text-red-600">Per Km: ₹{item.perKmCharge}</p>
+            </div>
+          )}
           <div className="flex items-center gap-2">
             <p className="text-3xl font-grotesk font-extrabold text-black">
               ₹{item.actualPrice.toLocaleString("en-IN")}

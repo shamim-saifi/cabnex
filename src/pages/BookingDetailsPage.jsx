@@ -270,21 +270,15 @@ const BookingDetailsPage = () => {
   // Use API totalAmount, fallback to selectedItem.actualPrice
   const totalAmount = isActivity ? selectedItem.actualPrice : (apiCategory?.totalAmount || selectedItem.actualPrice);
 
-  // taxSlab is percentage → NO 18% FALLBACK
-  const taxPercentage = isActivity ? 0 : (apiCategory?.taxSlab || 0);
-
-  // GST = total × tax% / 100
-  const gstAmount = totalAmount * (taxPercentage / 100);
-
-  // Base Fare = Total - GST
-  const baseFare = totalAmount - gstAmount;
-
-  // Other charges
-  const extraKm = isActivity ? 0 : (apiCategory?.extraKmCharge || 0);
-  const nightCharge = isActivity ? 0 : (apiCategory?.nightCharge || 0);
-  const tollCharges = isActivity ? 0 : (apiCategory?.tollCharges || 0);
-  const driverAllowance = isActivity ? 0 : (apiCategory?.driverAllowance || 0);
-  const discount = isActivity ? 0 : (apiCategory?.discount || 0);
+  // Direct values from apiCategory
+  const baseFare = apiCategory?.baseFare || 0;
+  const taxAmount = apiCategory?.tax || 0; // Using 'tax' directly as requested
+  const extraKmCharges = apiCategory?.extraKmCharges || 0;
+  const totalNightCharge = apiCategory?.totalNightCharge || 0;
+  const hillCharge = apiCategory?.hillCharge || 0;
+  const totalDriverAllowance = apiCategory?.totalDriverAllowance || 0;
+  const tollCharges = apiCategory?.tollCharges || 0; // No change requested for this
+  const discount = apiCategory?.discount || 0; // No change requested for this
 
   // ======================================================================
 
@@ -518,63 +512,65 @@ const BookingDetailsPage = () => {
               <h4 className="font-grotesk font-extrabold text-lg mb-3 text-gray-800">Fare Breakdown</h4>
               <div className="space-y-2 text-sm font-grotesk">
 
+                {/* Base Fare - Always shown for non-activities */}
                 <div className="flex justify-between">
                   <span className="text-gray-600">Base Fare</span>
                   <span className="font-semibold">
-                    ₹{baseFare.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    ₹{apiCategory?.baseFare?.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                   </span>
                 </div>
 
-                {extraKm > 0 && (
+                {/* Extra KM Charges - For Transfer and Outstation */}
+                {(serviceType === 'transfer' || serviceType === 'outstation') && apiCategory?.extraKmCharges > 0 && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Extra KM Charge</span>
+                    <span className="text-gray-600">Extra KM Charges</span>
                     <span className="font-semibold">
-                      ₹{extraKm.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                      ₹{apiCategory.extraKmCharges.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
                 )}
 
-                {nightCharge > 0 && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Night Charge</span>
-                    <span className="font-semibold">
-                      ₹{nightCharge.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                    </span>
-                  </div>
-                )}
-
-                {tollCharges > 0 && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Toll Charges</span>
-                    <span className="font-semibold">
-                      ₹{tollCharges.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                    </span>
-                  </div>
-                )}
-
-                {driverAllowance > 0 && (
+                {/* Total Driver Allowance - For Outstation */}
+                {serviceType === 'outstation' && apiCategory?.totalDriverAllowance > 0 && (
                   <div className="flex justify-between">
                     <span className="text-gray-600">Driver Allowance</span>
                     <span className="font-semibold">
-                      ₹{driverAllowance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                      ₹{apiCategory.totalDriverAllowance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
                 )}
 
-                {discount > 0 && (
-                  <div className="flex justify-between text-green-600">
-                    <span>Discount</span>
-                    <span>-₹{discount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                {/* Total Night Charge - For Outstation */}
+                {serviceType === 'outstation' && apiCategory?.totalNightCharge > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Night Charge</span>
+                    <span className="font-semibold">
+                      ₹{apiCategory.totalNightCharge.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
                   </div>
                 )}
 
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Tax (GST {taxPercentage}%)</span>
-                  <span className="font-semibold">
-                    ₹{gstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </span>
-                </div>
+                {/* Hill Charge - For Outstation */}
+                {serviceType === 'outstation' && apiCategory?.hillCharge > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Hill Charge</span>
+                    <span className="font-semibold">
+                      ₹{apiCategory.hillCharge.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                  </div>
+                )}
 
+                {/* Tax - For all non-activities */}
+                {apiCategory?.tax > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Tax</span>
+                    <span className="font-semibold">
+                      ₹{apiCategory.tax.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                  </div>
+                )}
+
+                {/* Total Amount - Always shown for non-activities */}
                 <div className="border-t pt-2 mt-3 flex justify-between font-bold text-base text-black">
                   <span>Total Amount</span>
                   <span>₹{totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
