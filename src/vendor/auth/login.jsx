@@ -154,7 +154,7 @@ export default function VendorLogin() {
         ? { email: forgotData.identifier }
         : { phone: forgotData.identifier };
 
-      const response = await api.post("/api/v1/otp/send", payload);
+      const response = await api.post("/api/v1/vendor/send-forget-otp", payload);
       if (response.data.success) {
         setForgotData((prev) => ({ ...prev, showForgotOTP: true }));
         toast.info(`OTP sent to ${forgotData.identifier}. Use 1234 for testing.`);
@@ -192,7 +192,7 @@ export default function VendorLogin() {
         ? { email: forgotData.identifier, otp: otpString }
         : { phone: forgotData.identifier, otp: otpString };
 
-      const response = await api.post("/api/v1/otp/verify", payload);
+      const response = await api.post("/api/v1/vendor/verify-forget-otp", payload);
       if (response.data.success) {
         setForgotData((prev) => ({
           ...prev,
