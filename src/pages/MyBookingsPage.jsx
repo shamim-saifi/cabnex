@@ -155,7 +155,7 @@ const MyBookingsPage = () => {
     const pickupDate = new Date(pickupDateTime);
 
     return (
-      <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-6 hover:shadow-lg transition-shadow duration-300">
+      <div className="bg-white rounded-2xl shadow-md border h-full flex-col flex border-gray-200 p-6 hover:shadow-lg transition-shadow duration-300">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
           <h3 className="text-xl font-bold text-gray-800 mb-2 sm:mb-0 font-grotesk">
             {carCategory.charAt(0).toUpperCase() + carCategory.slice(1)} |{" "}
@@ -213,7 +213,7 @@ const MyBookingsPage = () => {
           )}
         </div>
 
-        <div className="border-t border-gray-200 mt-4 pt-4 flex justify-between items-center">
+        <div className="border-t border-gray-200 mt-auto pt-4 flex justify-between items-center">
           <div className="flex gap-2">
             <button
               onClick={() => handleView(booking)}
