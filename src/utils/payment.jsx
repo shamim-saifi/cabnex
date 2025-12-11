@@ -1,9 +1,10 @@
 // src/utils/payment.js
 import axios from 'axios';
 import { toast } from 'sonner';
+import { endpoints } from '../api/api-config'; // Import endpoints
 
 const API_URL = 'https://api.cabnex.in/api/v1';
-const BASE_URL = 'https://cabnex.in';
+const BASE_URL = 'http://localhost:5173';
 
 export const loadRazorpay = async ({
   amount,
@@ -148,5 +149,36 @@ setTimeout(() => {
     document.head.appendChild(script);
   } else {
     initiatePayment();
+  }
+};
+
+export const createOfflineBooking = async (bookingDetails) => {
+  try {
+    const bookingRes = await axios.post(endpoints.offlineBooking, bookingDetails, {
+      withCredentials: true,
+    });
+
+    if (bookingRes.data.success) {
+      toast.success('Booking successful! Redirecting to success page...');
+      const bookingResponse = encodeURIComponent(JSON.stringify(bookingRes.data));
+      setTimeout(() => {
+        window.location.href = `${BASE_URL}/success?data=${bookingResponse}`;
+      }, 2000);
+    } else {
+      toast.error(bookingRes.data.message || 'Booking failed! Redirecting to failure page...');
+      // setTimeout(() => {
+      //   window.location.href = `${BASE_URL}/failure?reason=${encodeURIComponent(
+      //     bookingRes.data.message || 'unknown'
+      //   )}`;
+      // }, 2000);
+    }
+  } catch (err) {
+    console.error('Offline Booking Error:', err.response?.data || err);
+    toast.error('Booking failed! Redirecting to failure page...');
+    // setTimeout(() => {
+    //   window.location.href = `${BASE_URL}/failure?reason=${encodeURIComponent(
+    //     err.response?.data?.message || 'network_error'
+    //   )}`;
+    // }, 2000);
   }
 };
