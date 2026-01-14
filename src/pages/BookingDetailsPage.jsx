@@ -10,13 +10,9 @@ import {
   UserIcon,
   EnvelopeIcon,
   ChevronDownIcon,
-<<<<<<< HEAD
   FunnelIcon,
   BanknotesIcon,
   TicketIcon,
-=======
-  XMarkIcon,
->>>>>>> 483d091c1171835c074f702931216af0c21c4378
 } from "@heroicons/react/24/solid";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSearch } from "../context/SearchContext";
@@ -236,14 +232,18 @@ const BookingDetailsPage = () => {
   // State for selected add-on activities
   const [selectedActivities, setSelectedActivities] = useState([]);
   const [activitiesTotal, setActivitiesTotal] = useState(0);
-  const [selectedActivityForDetails, setSelectedActivityForDetails] = useState(null);
+  const [selectedActivityForDetails, setSelectedActivityForDetails] =
+    useState(null);
 
   // Extract cityActivities from searchResult
   const cityActivities = searchResult?.data?.cityActivities || [];
 
   // Calculate activitiesTotal whenever selectedActivities changes
   useEffect(() => {
-    const total = selectedActivities.reduce((sum, activity) => sum + activity.price, 0);
+    const total = selectedActivities.reduce(
+      (sum, activity) => sum + activity.price,
+      0
+    );
     setActivitiesTotal(total);
   }, [selectedActivities]);
 
@@ -383,13 +383,13 @@ const BookingDetailsPage = () => {
         paymentMethod: paymentOption, // Add payment method
         paymentStatus: paymentOption === "offline" ? "pending" : "paid", // Set status based on option
         ...(selectedActivities.length > 0 && {
-          addons: selectedActivities.map(a => ({
+          addons: selectedActivities.map((a) => ({
             activityId: a._id,
             title: a.title,
-            price: a.price
+            price: a.price,
           })),
           addonsTotal: activitiesTotal,
-        })
+        }),
       };
     }
 
@@ -911,7 +911,10 @@ const BookingDetailsPage = () => {
                 </h4>
                 <div className="space-y-4">
                   {cityActivities.map((activity) => (
-                    <div key={activity._id} className="flex items-center justify-between">
+                    <div
+                      key={activity._id}
+                      className="flex items-center justify-between"
+                    >
                       <label className="flex items-center gap-3 cursor-pointer">
                         <input
                           type="checkbox"
@@ -927,13 +930,16 @@ const BookingDetailsPage = () => {
                       </label>
                       <div className="flex items-center gap-4">
                         <span className="font-grotesk font-bold text-base text-orange-500">
-                          ₹{activity.price.toLocaleString("en-IN", {
+                          ₹
+                          {activity.price.toLocaleString("en-IN", {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
                           })}
                         </span>
-                        <button 
-                          onClick={() => setSelectedActivityForDetails(activity)}
+                        <button
+                          onClick={() =>
+                            setSelectedActivityForDetails(activity)
+                          }
                           className="text-sm text-blue-500 hover:underline"
                         >
                           View Details
@@ -964,9 +970,12 @@ const BookingDetailsPage = () => {
                 {[
                   {
                     value: "half",
-                    label: `Pay ₹${(finalTotalAmount / 2).toLocaleString("en-IN", {
-                      minimumFractionDigits: 2,
-                    })} now (Half Payment)`,
+                    label: `Pay ₹${(finalTotalAmount / 2).toLocaleString(
+                      "en-IN",
+                      {
+                        minimumFractionDigits: 2,
+                      }
+                    )} now (Half Payment)`,
                   },
                   {
                     value: "full",
@@ -1023,10 +1032,12 @@ const BookingDetailsPage = () => {
             </div>
             <div className="p-5">
               <p className="text-gray-600 mb-4">
-                {selectedActivityForDetails.description || "No description available."}
+                {selectedActivityForDetails.description ||
+                  "No description available."}
               </p>
               <span className="font-grotesk font-bold text-lg text-orange-500">
-                Price: ₹{selectedActivityForDetails.price.toLocaleString("en-IN", {
+                Price: ₹
+                {selectedActivityForDetails.price.toLocaleString("en-IN", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
@@ -1040,9 +1051,11 @@ const BookingDetailsPage = () => {
                 }}
                 className="bg-orange-500 hover:bg-black text-white font-grotesk font-bold py-2 px-4 rounded-full text-base transition-colors"
               >
-                {selectedActivities.some(a => a._id === selectedActivityForDetails._id)
-                  ? 'Remove from Booking'
-                  : 'Add to Booking'}
+                {selectedActivities.some(
+                  (a) => a._id === selectedActivityForDetails._id
+                )
+                  ? "Remove from Booking"
+                  : "Add to Booking"}
               </button>
             </div>
           </div>
