@@ -10,6 +10,9 @@ import {
   UserIcon,
   EnvelopeIcon,
   ChevronDownIcon,
+  FunnelIcon,
+  BanknotesIcon,
+  TicketIcon,
 } from "@heroicons/react/24/solid";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSearch } from "../context/SearchContext";
@@ -27,6 +30,9 @@ const iconMap = {
   ClockIcon,
   UserIcon,
   EnvelopeIcon,
+  FunnelIcon,
+  BanknotesIcon,
+  TicketIcon,
 };
 
 const BookingDetailsPage = () => {
@@ -34,8 +40,6 @@ const BookingDetailsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { item } = location.state || {};
-
-
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -51,35 +55,21 @@ const BookingDetailsPage = () => {
     const featureMap = {
       AC: {
         text: "Air Conditioning",
-        description: "Stay cool with advanced climate control system.",
       },
       Automatic: {
         text: "Automatic Transmission",
-        description: "Smooth and effortless gear shifting.",
+      },
+      Comfort: {
+        text: " Comfortable for Outstation Travel",
       },
       Petrol: {
         text: "Petrol Engine",
-        description: "Fuel efficient engine for city and highway driving.",
-      },
-      "4 Seats": {
-        text: "4 Seater",
-        description: "Compact seating for small groups or families.",
-      },
-      "5 Seats": {
-        text: "5 Seater",
-        description: "Spacious seating for family or business travel.",
-      },
-      "7 Seats": {
-        text: "7 Seater",
-        description: "Large capacity for groups and luggage.",
       },
       Manual: {
         text: "Manual Transmission",
-        description: "Traditional gear shifting for experienced drivers.",
       },
       Diesel: {
         text: "Diesel Engine",
-        description: "High mileage for long distance travel.",
       },
     };
     return features.map(
@@ -105,7 +95,6 @@ const BookingDetailsPage = () => {
       { text: "Free waiting up to 45 minutes", icon: "ClockIcon" },
     ],
     actualPrice: 4500,
-    description: "Comfortable item perfect for your needs.",
     type: "car",
     cancellationPolicy: "Non-refundable",
   };
@@ -115,7 +104,7 @@ const BookingDetailsPage = () => {
         ...item,
         features: isActivity ? [] : transformFeatures(item.features || []),
         actualPrice: item.actualPrice || 4500,
-        description: item.description || "Selected item for your booking.",
+        description: item.description || "Selected car for your booking.",
         inclusions: item.inclusions || defaultItem.inclusions,
         image: item.image || defaultItem.image,
         cancellationPolicy: item.cancellationPolicy || "Non-refundable",
@@ -312,7 +301,8 @@ const BookingDetailsPage = () => {
           serviceType === "rental"
             ? searchFormData.rentalPackage || null
             : null,
-        packageId: serviceType === "rental"
+        packageId:
+          serviceType === "rental"
             ? searchFormData.rentalPackage || null
             : null,
         exactLocation: travellerInfo.exactPickupLocation,
@@ -460,9 +450,6 @@ const BookingDetailsPage = () => {
                         <div>
                           <p className="font-grotesk font-bold text-sm text-black">
                             {feature.text}
-                          </p>
-                          <p className="font-grotesk text-xs text-gray-600">
-                            {feature.description}
                           </p>
                         </div>
                       </div>
